@@ -1,8 +1,8 @@
-import { localDataName } from "@/constants/appInfos";
 import axios from "axios";
 import { error } from "console";
 import { config } from "process";
 import queryString from "query-string";
+import { localDataName } from "../constants/appInfos";
 
 const baseURL = 'http://localhost:5000';
 
@@ -30,7 +30,7 @@ axiosClient.interceptors.request.use(async (config: any) => {
         Accept: 'application/json',
         ...config.headers,
     }
- 
+
     return {...config, data:config.data ?? null};
 });
 

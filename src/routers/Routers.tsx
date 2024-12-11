@@ -6,6 +6,7 @@ import { localDataName } from '../constants/appInfos'
 import { Layout, Spin } from 'antd'
 import AuthRouter from './AuthRouter'
 import type { AppProps } from 'next/app'
+import { usePathname } from 'next/navigation'
 
 
 const { Content, Footer, Header } = Layout
@@ -17,26 +18,29 @@ const Routers = ({ Component, pageProps }: any) => {
   const auth: AuthState = useSelector(authSelector);
   const dispatch = useDispatch();
 
+  const path = usePathname();
+  console.log(path);
+
   useEffect(() => {
     getData();
   }, [])
 
   const getData = async () => {
-    const res = localStorage.getItem(localDataName.authData);
-    res && dispatch(addAuth(JSON.parse(res)));
+    // const res = localStorage.getItem(localDataName.authData);
+    // res && dispatch(addAuth(JSON.parse(res)));
   }
 
   // Nếu chưa có auth.token thì sẽ vào hàm Auth còn có thì vào hàm Main
-  return isloading ? (<Spin />) : !auth.token ? (
+  return isloading ? (<Spin />) : path && path.includes('auth') ? (
     // Chưa đăng nhập thì vào đây
-    <Layout>
+    <Layout className='bg-white'>
       <Content>
         <Component pageProps={pageProps} />
       </Content>
     </Layout>
   ) : (
     // Đăng nhập rồi thì vào đây
-    <Layout>
+    <Layout className='bg-white'>
       <Header />
       <Content>
         <Component pageProps={pageProps} />

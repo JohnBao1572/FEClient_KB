@@ -1,11 +1,15 @@
 import { authSelector } from '@/reduxs/reducers/authReducer'
+import Link from 'next/link'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import Login from './auth/Login';
+// import Login from './auth/login';
 
 const HomePage = () => {
-  const auth = useSelector(authSelector);
-  return auth.token ? <HomePage /> : <Login />
+
+  return <div>
+    <Link href={'/auth/signup'}>signup </Link>
+    
+  </div>
 }
 
 export default HomePage
