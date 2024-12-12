@@ -1,6 +1,9 @@
 import handleAPI from '@/apis/handleAPI';
+import { addAuth } from '@/reduxs/reducers/authReducer';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
 
 interface SignUp {
     firstName: string;
@@ -16,19 +19,27 @@ const signup = () => {
     const [isAgree, setIsAgree] = useState(true);
 
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
+
+    const router = useRouter();
 
     const handleSignUp = async (value: SignUp) => {
         const api = `/customer/add-new`;
         setIsLoading(true);
 
         try {
-            const res = await handleAPI({url: api, data: value, method: 'post'});
-            // const res = await handleAPI({ url: api, data: value, method: 'post' });
-            console.log(res);
+            const res = await handleAPI({ url: api, data: value, method: 'post' });
+            console.log(res)
 
+            if(res.data){
+                dispatch(addAuth(res.data));
+                localStorage.setItem('authData', JSON.stringify(res.data));
+            }
+
+            router.push(`/`);
         } catch (error) {
             console.log(error);
-        } finally{
+        } finally {
             setIsLoading(false);
         }
     }
@@ -79,7 +90,7 @@ const signup = () => {
                                 </Form.Item>
                             </Form>
                             <div className="mt-4">
-                                <Checkbox onChange={val => setIsAgree(val.target.checked)} value={isAgree}>
+                                <Checkbox onChange={val => setIsAgree(val.target.checked)} checked={isAgree}>
                                     I agree to the Terms & Condition
                                 </Checkbox>
                             </div>

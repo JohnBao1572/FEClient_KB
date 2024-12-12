@@ -1,9 +1,13 @@
+
+import Link from 'next/link'
 import React from 'react'
+
+
 
 const Login = () => {
   return (
     <div>
-      Login
+      <Link href={`/auth/signup`}>Dang ky</Link>
     </div>
   )
 }
