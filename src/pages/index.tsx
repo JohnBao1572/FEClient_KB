@@ -8,7 +8,8 @@ import { useSelector } from 'react-redux'
 const HomePage = () => {
 
   return <div>
-    <Link href={`/auth/signup`}>dang ky</Link>
+    {/* <Link href={`/auth/signup`}>dang ky</Link> */}
+    Welcome to my company
   </div>
 }
 
