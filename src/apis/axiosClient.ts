@@ -6,24 +6,35 @@ import { localDataName } from "../constants/appInfos";
 
 const baseURL = 'http://localhost:5000';
 
-const getAccesstoken = () => {
-    const res = localStorage.getItem(localDataName.authData);
+// const getAccesstoken = () => {
+//     const res = localStorage.getItem(localDataName.authData);
 
-    if (res) {
-        const auth = JSON.parse(res);
-        return auth && auth.token ? auth.token : '';
-    } else {
-        return '';
-    }
-}
+//     if (res) {
+//         const auth = JSON.parse(res);
+//         return auth && auth.token ? auth.token : '';
+//     } else {
+//         return '';
+//     }
+// }
 
 const axiosClient = axios.create({
     baseURL,
+    // paramsSerializer: (params) => queryString.stringify(params),
     paramsSerializer: (params) => queryString.stringify(params),
 });
 
+const getAccesstoken = () => {
+	const res = localStorage.getItem('authData');
+
+	return res ? JSON.parse(res).accesstoken : '';
+};
+
 axiosClient.interceptors.request.use(async (config: any) => {
     const accesstoken = getAccesstoken(); 
+
+    // FIxing
+    console.log("Request URL:", config.url); // Log URL để kiểm tra
+    console.log("Request Data:", config.data); // Log Data để kiểm tra
 
     config.headers = {
         Authorization: accesstoken ? `Bearer ${accesstoken}` : '',
@@ -34,16 +45,19 @@ axiosClient.interceptors.request.use(async (config: any) => {
     return {...config, data:config.data ?? null};
 });
 
-axiosClient.interceptors.response.use(
+axios.interceptors.response.use(
     (res) => {
         if (res.data && res.status >= 200 && res.status < 300) {
-            return res.data;
+            return res.data.data;
         } else {
             return Promise.reject(res.data)
         }
     },
     (error) => {
         const { response } = error;
+
+        console.error("Response error:", response); // Log error response để kiểm tra
+
         return Promise.reject(response.data);
     }
 )

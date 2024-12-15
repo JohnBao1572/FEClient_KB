@@ -4,20 +4,6 @@ import { StringLiteral } from "typescript";
 import { localDataName } from "../../constants/appInfos";
 
 
-// export interface AuthState {
-//     token: string;
-//     _id: string;
-//     name: string;
-//     rule: number;
-// };
-
-// const initialState = {
-//     token: '',
-//     _id: '',
-//     name: '',
-//     rule: 0
-// };
-
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
