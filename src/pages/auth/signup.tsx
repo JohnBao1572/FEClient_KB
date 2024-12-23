@@ -1,8 +1,9 @@
 import handleAPI from '@/apis/handleAPI';
 import { addAuth } from '@/reduxs/reducers/authReducer';
 import { Button, Checkbox, Form, Input, message, Space, Typography } from 'antd';
+import { time } from 'console';
 import { useRouter } from 'next/router';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BsArrowBarLeft, BsArrowLeft } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 
@@ -26,6 +27,11 @@ const signup = () => {
 	// (<string[]>) là một mảng do user truyền vào. Danh sách, tập hợp các chuỗi như [] hoặc ['abc', 'xyz']
 	const [numOfCode, setNumOfCode] = useState<string[]>([]);
 
+	// Xử lí logic hạn giờ khi gửi mã OTP xác nhận
+	const [times, setTimes] = useState(60);
+
+	console.log(times)
+
 	const [form] = Form.useForm();
 	const dispatch = useDispatch();
 
@@ -39,6 +45,12 @@ const signup = () => {
 	const inpRef5 = useRef<any>(null);
 	const inpRef6 = useRef<any>(null);
 
+	useEffect(() => {
+		const timeout = setInterval(() => {
+			setTimes((t) => t - 1);
+		}, 1000)
+		return () => clearTimeout(times);
+	}, []);
 
 	const handleSignUp = async (value: SignUp) => {
 		const api = '/customers/add-new';
@@ -51,8 +63,6 @@ const signup = () => {
 			if (res.data) {
 				setSignValues(res.data.data);
 				console.log('Response data contains _id:', res.data.data._id);
-
-				// inpRef1.current.focus();
 			}
 
 			//  router.push(`/`);
@@ -87,21 +97,37 @@ const signup = () => {
 
 			try {
 				console.log(code.toUpperCase());
-				const res = await handleAPI({ url: api, data: {
-					id: signValues._id,
-					code: code.toUpperCase(),
-				  }, method: 'put', })
+				const res = await handleAPI({
+					url: api, data: {
+						id: signValues._id,
+						code: code.toUpperCase(),
+					}, method: 'put',
+				})
 
 				console.log(res);
 
-				// dispatch(addAuth(res.data));
-				// localStorage.setItem('authData', JSON.stringify(res.data));
+				dispatch(addAuth(res.data.data));
+				localStorage.setItem('authData', JSON.stringify(res.data.data));
+
+				router.push('/');
 			} catch (error: any) {
 				message: error.message;
 				console.log(error);
 			}
 		}
 	};
+
+	const handleResendCode = async () => {
+		const api = `/customers/resend-verify?id=${signValues?._id}&email=${signValues?.email}`;
+		console.log(api)
+		try {
+			await handleAPI({ url: api });
+
+			setTimes(60);
+		} catch (error: any) {
+			message: error.message
+		}
+	}
 
 	return (
 		<div className='container-fluid' style={{ height: '100vh' }}>
@@ -260,7 +286,7 @@ const signup = () => {
 									</div>
 									<div className='mt-4'>
 										<Button
-											// disabled={numsOfCode.length < 6 || times < 0}
+											disabled={numOfCode.length < 6 || times < 0}
 											loading={isLoading}
 											type='primary'
 											size='large'
@@ -268,6 +294,18 @@ const signup = () => {
 											onClick={handleVerify}>
 											Verify
 										</Button>
+
+										{/* Nút resend code */}
+										<div className="mt-2 text-center">
+											{
+												times < 0 ? (
+													<Button type='link' onClick={handleResendCode}>Resend</Button>
+												)
+													: (
+														<Typography>Resend a new code: {times}s</Typography>
+													)
+											}
+										</div>
 									</div>
 								</>
 							) : (
