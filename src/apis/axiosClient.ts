@@ -2,23 +2,10 @@ import axios from "axios";
 import { error } from "console";
 import { config } from "process";
 import queryString from "query-string";
-import { localDataName } from "../constants/appInfos";
-
-const baseURL = 'http://localhost:5000';
-
-// const getAccesstoken = () => {
-//     const res = localStorage.getItem(localDataName.authData);
-
-//     if (res) {
-//         const auth = JSON.parse(res);
-//         return auth && auth.token ? auth.token : '';
-//     } else {
-//         return '';
-//     }
-// }
+import { appInfo, localDataName } from "../constants/appInfos";
 
 const axiosClient = axios.create({
-    baseURL,
+    baseURL: appInfo.baseURL,
     // paramsSerializer: (params) => queryString.stringify(params),
     paramsSerializer: (params) => queryString.stringify(params),
 });
