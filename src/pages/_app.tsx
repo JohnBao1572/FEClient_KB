@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
         token:{
           colorPrimary: '#131118'
         },
+        components: {},
       }}>
         <Routers Component={Component} pageProps={pageProps} />
       </ConfigProvider>
