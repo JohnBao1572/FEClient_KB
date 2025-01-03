@@ -8,6 +8,7 @@ export interface CategoyModel {
     description: string;
     createdAt: string;
     updatedAt: string;
+	image?: string;
     _v: number;
 }
 
