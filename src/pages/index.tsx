@@ -1,9 +1,9 @@
 import handleAPI from '@/apis/handleAPI'
-import { TabbarComponent } from '@/components'
+import { ProductItem, TabbarComponent } from '@/components'
 import HeadComponents from '@/components/HeadComponents'
 import HeaderComponent from '@/components/HeaderComponent'
 import { appInfo } from '@/constants/appInfos'
-import { CategoyModel } from '@/models/Product'
+import { CategoyModel, ProductModel } from '@/models/Product'
 import { PromotionModel } from '@/models/PromotionModels'
 import { authSelector } from '@/reduxs/reducers/authReducer'
 import { Button, Card, Carousel, Space, Typography } from 'antd'
@@ -19,7 +19,7 @@ const { Title } = Typography;
 
 const HomePage = (data: any) => {
   const pageProps = data.pageProps;
-  const { promotions, categories }: { promotions: PromotionModel[], categories: CategoyModel[] } = pageProps;
+  const { promotions, categories, bestSellers }: { promotions: PromotionModel[], categories: CategoyModel[], bestSellers: ProductModel[] } = pageProps;
   const [isLoading, setIsLoading] = useState(false);
   const [numOfColumn, setNumOfColumn] = useState(4);
   const [catsArrays, setCatsArrays] = useState<
@@ -31,6 +31,7 @@ const HomePage = (data: any) => {
   const catSliceRef = useRef<CarouselRef>(null);
   const router = useRouter();
 
+  console.log(bestSellers);
   //Hiển thị các (cates) thẻ cha ra màn hình còn (catesCon) thì không xuất hiện
   const catsFilter = categories.length > 0 ? categories.filter((element) => !element.parentId) : [];
   console.log(catsFilter)
@@ -75,9 +76,12 @@ const HomePage = (data: any) => {
     return <div>Không có dữ liệu để hiển thị.</div>;
   }
 
+
+
   return (
     <>
       <HeadComponents title='BaoThanh Fashion' />
+      {/* <Button onClick={getBestSellers}>Get seller</Button> */}
 
       <div className="container-fluid bg-light d-none d-md-block">
         <div className="container">
@@ -145,7 +149,7 @@ const HomePage = (data: any) => {
         <TabbarComponent title={'Shop category'}
           right={
             <Space>
-              <Button onClick={() => catSliceRef.current?.next()}
+              <Button onClick={() => catSliceRef.current?.prev()}
                 icon={<BsArrowLeft size={18} />} />
 
               <Button onClick={() => catSliceRef.current?.next()}
@@ -175,8 +179,8 @@ const HomePage = (data: any) => {
                             left: 10,
                           }}>
                           <Button style={{ width: '80%' }} size='large'
-                          onClick={() => router.push(`/filterProduct?catId=${item._id}`)}>
-                          {item.title}
+                            onClick={() => router.push(`/filterProduct?catId=${item._id}`)}>
+                            {item.title}
                           </Button>
                         </div>
                       </div>
@@ -185,9 +189,17 @@ const HomePage = (data: any) => {
                 ))}
               </div>
             </div>
-
           ))}
         </Carousel>
+      </div>
+
+      <div className='container'>
+        <TabbarComponent title='Our best seller' />
+        <div className="row">
+          {bestSellers.map((item) => (
+            <ProductItem item={item} key={item._id}/>
+          ))}
+        </div>
       </div>
     </>
   )
@@ -217,7 +229,8 @@ export const getStaticProps = async () => {
     // axios tự động chuyển đổi phản hồi JSON thành đối tượng JavaScript.
 
     const response = await fetch(`${appInfo.baseURL}/promotions/get-promotions?limit=5`);
-    const responseCats = await fetch(`${appInfo.baseURL}/products/get-categories`)
+    const responseCats = await fetch(`${appInfo.baseURL}/products/get-categories`);
+    const responseBestSellers = await fetch(`${appInfo.baseURL}/products/get-best-seller`);
 
     // const response = await fetch(`http://localhost:5000/promotions/get-promotions`);
     // const { data } = await axios.get('http://localhost:5000/promotions/get-promotions');
@@ -231,10 +244,14 @@ export const getStaticProps = async () => {
     const resultCats = await responseCats.json();
     const dataCats = resultCats?.data || [];
 
+    const resultsSeller = await responseBestSellers.json();
+    const dataSellers = resultsSeller?.data || [];
+
     return {
       props: {
         promotions: data,
         categories: dataCats,
+        bestSellers: dataSellers,
       },
     };
   } catch (error) {

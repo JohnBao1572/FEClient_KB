@@ -1,5 +1,41 @@
-
-
-.title-danger{
+.title-danger {
   color: coral;
+}
+
+/* Css cho (Module) ProductItem  */
+.product-bestSeller-item .p-2 .ant-typography {
+  margin: 0;
+}
+.product-bestSeller-item:hover {
+  box-shadow: 9px 9px 50px 5px rgba(0, 0, 0, 0.12);
+  -webkit-box-shadow: 9px 9px 50px 5px rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 9px 9px 50px 5px rgba(0, 0, 0, 0.12);
+  transition: all 0.5s;
+}
+
+.product-bestSeller-item .button-container {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  top: 0px;
+  left: 0px;
+}
+
+.product-bestSeller-item .button-container .icon-addCart{
+  border: 1px solid blue;
+  border-radius: 100!important;
+  width: 38px;
+}
+
+.product-bestSeller-item .button-container .btn-list{
+  height: 100%;
+}
+
+.product-bestSeller-item .button-container{
+  display: none;
+}
+
+.product-bestSeller-item:hover .button-container{
+  display: block;
+  transition: all 5s;
 }
