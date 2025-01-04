@@ -132,7 +132,8 @@ const HomePage = (data: any) => {
                       <Button
                         iconPosition="end"
                         size="large"
-                        style={{ backgroundColor: 'black', color: 'white' }}>
+                        style={{ backgroundColor: 'black', color: 'white' }}
+                        icon={<BsArrowRight size={18}/>}>
                         Shop now
                       </Button>
                     </div>
