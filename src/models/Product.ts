@@ -39,4 +39,6 @@ export interface SubProductModel {
 	createdAt: string;
 	updatedAt: string;
 	__v: number;
+	discount?: number;
+	imgURL?: string;
 }
