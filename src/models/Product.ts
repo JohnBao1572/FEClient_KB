@@ -25,6 +25,7 @@ export interface ProductModel {
 	__v: number;
 	isDeleted: boolean;
 	subItems: SubProductModel[];
+	price: number[];
 }
 
 export interface SubProductModel {

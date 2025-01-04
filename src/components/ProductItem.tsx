@@ -1,5 +1,6 @@
 import { colors } from '@/constants/colors';
 import { ProductModel } from '@/models/Product'
+import { VND } from '@/utils/handleCurrency';
 import { Button, Space, Typography } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
 import { BsEye } from 'react-icons/bs';
@@ -69,9 +70,9 @@ const ProductItem = (props: Props) => {
             </div>
 
             <div className="p-2">
-                <Paragraph style={{ fontWeight: 'bold' }}>{item.supplier}</Paragraph>
-                <Paragraph>{item.title}</Paragraph>
-                <Paragraph style={{ fontSize: 20 }}>{`0.00 - 100.20`}</Paragraph>
+                {/* <Paragraph >{item.supplier}</Paragraph> */}
+                <Paragraph style={{ fontWeight: 'bold' }}>{item.title}</Paragraph>
+                <Paragraph style={{ fontSize: 17 }}>{item.price.length > 0 ? `${VND.format(item.price[0])} - ${VND.format(item.price[1])}`: ''}</Paragraph>
             </div>
         </div>
     )

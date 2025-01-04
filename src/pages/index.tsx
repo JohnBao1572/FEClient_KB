@@ -31,10 +31,12 @@ const HomePage = (data: any) => {
   const catSliceRef = useRef<CarouselRef>(null);
   const router = useRouter();
 
-  console.log(bestSellers);
   //Hiển thị các (cates) thẻ cha ra màn hình còn (catesCon) thì không xuất hiện
   const catsFilter = categories.length > 0 ? categories.filter((element) => !element.parentId) : [];
-  console.log(catsFilter)
+  // const catsFilter = Array.isArray(categories) && categories.length > 0
+  //   ? categories.filter((element) => !element.parentId)
+  //   : [];
+  // console.log(catsFilter)
 
   // Đăng ký một sự kiện lắng nghe khi cửa sổ trình duyệt được thay đổi kích thước.
   // Mỗi lần trình duyệt thay đổi kích thước, hàm callback được gọi.
@@ -76,12 +78,12 @@ const HomePage = (data: any) => {
     return <div>Không có dữ liệu để hiển thị.</div>;
   }
 
-
+  // console.log(bestSellers);
 
   return (
     <>
       <HeadComponents title='BaoThanh Fashion' />
-      {/* <Button onClick={getBestSellers}>Get seller</Button> */}
+      {/* <Button onClick={() => console.log(bestSellers)}>Get seller</Button> */}
 
       <div className="container-fluid bg-light d-none d-md-block">
         <div className="container">
@@ -197,7 +199,7 @@ const HomePage = (data: any) => {
         <TabbarComponent title='Our best seller' />
         <div className="row">
           {bestSellers.map((item) => (
-            <ProductItem item={item} key={item._id}/>
+            <ProductItem item={item} key={item._id} />
           ))}
         </div>
       </div>
