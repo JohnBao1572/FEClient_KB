@@ -7,6 +7,7 @@ import { Breadcrumb, Button, Carousel, Rate, Space, Tag, Typography } from 'antd
 import Link from 'next/link';
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
+import { PiCableCar } from 'react-icons/pi';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -47,13 +48,18 @@ const ProductDetail = ({ pageProps }: any) => {
                     <div className="row mt-3">
                         <div className="col-sm-12 col-md-6">
                             <div className="bg-light text-center p-4">
-                                <img
+                                {!subProductSelected.imgURL || subProductSelected.images.length === 0 ? (
+                                    <PiCableCar size={50} className='text-muted'/>
+                                ) : (
+                                    <img
                                     // src={subProductSelected.images.length > 0 ? subProductSelected.images[0] : ''}
                                     src={subProductSelected.imgURL ? subProductSelected.imgURL : subProductSelected.images.length > 0 ? subProductSelected.images[0] : ''}
                                     style={{
                                         width: '50%',
                                     }}
                                     className="large-image" />
+                                )}
+                                
                             </div>
 
                             {/* <Space className='mt-2' wrap>
