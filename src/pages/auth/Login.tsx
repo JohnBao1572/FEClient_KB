@@ -17,6 +17,10 @@ const Login = () => {
   const router = useRouter();
 
   const [form] = Form.useForm();
+  const searchParams = useSearchParams();
+  const id = searchParams.get('productId');
+  const slug = searchParams.get('slug')
+
   const handleLogin = async (values: { email: string, password: string }) => {
     const api = `/customers/login`;
     setIsLoading(true);
@@ -27,7 +31,9 @@ const Login = () => {
       dispatch(addAuth(res.data.data));
       localStorage.setItem('authData', JSON.stringify(res.data.data));
 
-      router.push('/');
+      // Nếu khách hàng muốn mua hàng thì pk đăng nhập (đăng ký)
+      // Đăng nhập xong sẽ chuyển về trang sản phẩm vừa nãy có ý định mua 
+      router.push(id && slug ? `/products/${slug}/${id}` : '/');
     } catch (error) {
       message.error('Login error');
     } finally {

@@ -1,5 +1,7 @@
+import { SubProductModel } from '@/models/Product';
 import { authSelector, removeAuth } from '@/reduxs/reducers/authReducer'
-import { Affix, Avatar, Button, Drawer, Menu, Space } from 'antd';
+import { cartSelector } from '@/reduxs/reducers/cartReducer';
+import { Affix, Avatar, Badge, Button, Drawer, Menu, Space } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
@@ -13,6 +15,8 @@ const HeaderComponent = () => {
   const auth = useSelector(authSelector);
   const dispatch = useDispatch();
   const router = useRouter();
+  const cart: SubProductModel[] = useSelector(cartSelector);
+  console.log(cart)
 
   return (
     <Affix offsetTop={0}>
@@ -71,9 +75,16 @@ const HeaderComponent = () => {
               <Space>
                 <Button icon={<IoSearch size={20} />} type='text' />
                 <Button icon={<IoHeartHalfOutline size={20} />} type='text' />
-                <Button icon={<BiCart size={20} />} type='text' />
-                {auth.accesstoken && auth._id ? (
+                <Button
+                  icon={
+                    <Badge count={cart.length}>
+                      <BiCart size={20} />
+                    </Badge>
+                  }
+                  type="text"
+                 />
 
+                {auth.accesstoken && auth._id ? (
                   <Button onClick={() => {
                     dispatch(removeAuth({}))
                     localStorage.clear();

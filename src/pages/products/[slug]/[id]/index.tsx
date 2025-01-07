@@ -2,12 +2,20 @@ import CarouselImages from '@/components/CarouselImages';
 import HeadComponents from '@/components/HeadComponents';
 import { appInfo } from '@/constants/appInfos';
 import { ProductModel, SubProductModel } from '@/models/Product';
+import { authSelector } from '@/reduxs/reducers/authReducer';
+import { addProduct, cartSelector } from '@/reduxs/reducers/cartReducer';
 import { VND } from '@/utils/handleCurrency';
-import { Breadcrumb, Button, Carousel, Rate, Space, Tag, Typography } from 'antd';
+import { Breadcrumb, Button, Carousel, message, Rate, Space, Tag, Typography } from 'antd';
 import Link from 'next/link';
 import { useParams } from 'next/navigation'
-import React, { useState } from 'react'
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react'
+import { BiHeart } from 'react-icons/bi';
+import { CgAbstract, CgAdd } from 'react-icons/cg';
+import { IoAddSharp } from 'react-icons/io5';
+import { LuMinus } from 'react-icons/lu';
 import { PiCableCar } from 'react-icons/pi';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -16,10 +24,68 @@ const ProductDetail = ({ pageProps }: any) => {
 
     const [detail, setDetail] = useState<ProductModel>(product);
     const [subProductSelected, setSubProductSelected] = useState<SubProductModel>(subProducts[0] ?? []);
+    const auth = useSelector(authSelector);
+    const [count, setCount] = useState(1);
+    const router = useRouter();
+    const cart: SubProductModel[] = useSelector(cartSelector);
+    const dispatch = useDispatch();
 
-    console.log(subProductSelected);
+    // Dùng (effect) là để khi vào product detail thì carousel sẽ set hình ảnh phần tử số 0 mà không phải là icon (PiCableCar)
+    useEffect(() => {
+        if (subProducts.length > 0) {
+            setSubProductSelected({
+                ...subProducts[0],
+                imgURL: subProducts[0].images.length > 0 ? subProducts[0].images[0] : ''
+            })
+        }
+    }, [subProducts])
 
-    return (
+    // console.log(subProductSelected);
+    useEffect(() => {
+        setCount(1);
+    }, [subProductSelected])
+
+    const handleCart = async () => {
+        if (auth._id && auth.accesstoken) {
+            if (subProductSelected) {
+                const item = { ...subProductSelected, createdBy: auth._id, count }
+                // console.log(item);
+
+                dispatch(addProduct(item));
+            } else {
+                message.error('Please choice a product add to cart');
+            }
+        }
+        else {
+            router.push(`/auth/login?productId=${detail._id}&slug=${detail.slug}`)
+        }
+    }
+
+    const renderButtonGroup = () => {
+        const item = cart.find(element => element._id === subProductSelected?._id)
+        return (
+            subProductSelected && (
+                <>
+                    <div className='in-deQuantityOfDetailProduct' >
+                        <Button onClick={() => setCount(count + 1)}
+                            disabled={count === (item ? subProductSelected.qty = item.count : subProductSelected.qty)}
+                            icon={<IoAddSharp size={22} />} />
+                        <Text className='text-in-deQuantityOfDetailProduct'>{count}</Text>
+                        <Button onClick={() => setCount(count - 1)} disabled={count === 1} icon={<LuMinus size={22} />} />
+                    </div >
+
+                    <Button type='primary' style={{ minWidth: 200, height: 55 }}
+                        onClick={handleCart}
+                        disabled={item?.count === subProductSelected.qty}>
+                        Add to Cart
+                    </Button>
+                </>
+
+            )
+        )
+    }
+
+    return subProductSelected ? (
         <div>
             <HeadComponents title={detail.title}
                 description={detail.description}
@@ -49,17 +115,17 @@ const ProductDetail = ({ pageProps }: any) => {
                         <div className="col-sm-12 col-md-6">
                             <div className="bg-light text-center p-4">
                                 {!subProductSelected.imgURL || subProductSelected.images.length === 0 ? (
-                                    <PiCableCar size={50} className='text-muted'/>
+                                    <PiCableCar size={50} className='text-muted' />
                                 ) : (
                                     <img
-                                    // src={subProductSelected.images.length > 0 ? subProductSelected.images[0] : ''}
-                                    src={subProductSelected.imgURL ? subProductSelected.imgURL : subProductSelected.images.length > 0 ? subProductSelected.images[0] : ''}
-                                    style={{
-                                        width: '50%',
-                                    }}
-                                    className="large-image" />
+                                        // src={subProductSelected.images.length > 0 ? subProductSelected.images[0] : ''}
+                                        src={subProductSelected.imgURL ? subProductSelected.imgURL : subProductSelected.images.length > 0 ? subProductSelected.images[0] : ''}
+                                        style={{
+                                            width: '50%',
+                                        }}
+                                        className="large-image" />
                                 )}
-                                
+
                             </div>
 
                             {/* <Space className='mt-2' wrap>
@@ -170,12 +236,21 @@ const ProductDetail = ({ pageProps }: any) => {
                                     ))}
                                 </Space>
                             </div>
+
+                            <div className="mt-3 parent-in-deQuantityOfDetailProduct">
+                                <Space>
+                                    {renderButtonGroup()}
+
+
+                                    <Button icon={<BiHeart size={20} />} />
+                                </Space>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    ) : <></>
 }
 
 export const getStaticProps = async (context: any) => {

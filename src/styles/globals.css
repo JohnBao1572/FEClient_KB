@@ -60,3 +60,19 @@
   height: 32px;
   border-radius: 10px;
 }
+
+.in-deQuantityOfDetailProduct {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  border: 1px solid #212121;
+  min-height: 40px;
+}
+.in-deQuantityOfDetailProduct span {
+  padding: 0 15px;
+}
+
+/* Thuộc tính này của nút tăng giảm trong ProductItemDetail */
+:where(.css-dev-only-do-not-override-dz3jpi).ant-btn.ant-btn-icon-only {
+  border: none;
+}

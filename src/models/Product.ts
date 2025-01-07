@@ -41,4 +41,6 @@ export interface SubProductModel {
 	__v: number;
 	discount?: number;
 	imgURL?: string;
+	count: number;
+	createdBy: string;
 }
