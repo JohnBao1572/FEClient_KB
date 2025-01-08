@@ -1,10 +1,11 @@
+import handleAPI from '@/apis/handleAPI';
 import { SubProductModel } from '@/models/Product';
 import { authSelector, removeAuth } from '@/reduxs/reducers/authReducer'
 import { cartSelector } from '@/reduxs/reducers/cartReducer';
 import { Affix, Avatar, Badge, Button, Drawer, Menu, Space } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { useDebugValue, useEffect, useState } from 'react'
 import { BiCart, BiPowerOff } from 'react-icons/bi';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoAccessibility, IoHeadsetOutline, IoHeartHalfOutline, IoSearch } from 'react-icons/io5';
@@ -17,6 +18,33 @@ const HeaderComponent = () => {
   const router = useRouter();
   const cart: SubProductModel[] = useSelector(cartSelector);
   console.log(cart)
+
+  useEffect(() =>{
+    cart.length > 0 && handleUpdateCartToDatabase(cart)
+  }, [cart])
+  const handleUpdateCartToDatabase = async (data: any[]) => {
+    data.forEach(async(item) => {
+        const api = `/carts/add-cart${item._id ? `?id=${item._id}` : ''}`;
+        const value = {
+            createdBy: item.createdBy,
+            count:item.count,
+            subProductId: item.subProductId,
+            size: item.size,
+            color: item.color,
+            price: item.price,
+            qty: item.qty,
+            productId: item.productId,
+        }
+
+        try {
+          console.log(value)
+            // const res = await handleAPI({ url: api, data: value, method: 'post', })
+            // console.log(res)
+        } catch (error: any) {
+            console.log(error);
+        }
+    })
+}
 
   return (
     <Affix offsetTop={0}>

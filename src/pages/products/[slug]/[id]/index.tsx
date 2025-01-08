@@ -28,6 +28,7 @@ const ProductDetail = ({ pageProps }: any) => {
     const [count, setCount] = useState(1);
     const router = useRouter();
     const cart: SubProductModel[] = useSelector(cartSelector);
+    const [instockQuantity, setInstockQuantity] = useState(subProductSelected?.qty);
     const dispatch = useDispatch();
 
     // Dùng (effect) là để khi vào product detail thì carousel sẽ set hình ảnh phần tử số 0 mà không phải là icon (PiCableCar)
@@ -45,13 +46,37 @@ const ProductDetail = ({ pageProps }: any) => {
         setCount(1);
     }, [subProductSelected])
 
+    useEffect(() => {
+        const item = cart.find(element => element._id === subProductSelected?._id);
+        if (subProductSelected) {
+            if (item) {
+                const qty = subProductSelected?.qty - item.count
+                setInstockQuantity(qty);
+                console.log(qty);
+            } else{
+                setInstockQuantity(subProductSelected?.qty);
+            }
+        }
+
+    }, [cart, subProductSelected])
+
     const handleCart = async () => {
         if (auth._id && auth.accesstoken) {
             if (subProductSelected) {
-                const item = { ...subProductSelected, createdBy: auth._id, count }
+                const item = subProductSelected;
+                const value = {
+                    createdBy: item.createdBy,
+                    count:item.count,
+                    subProductId: item._id,
+                    size: item.size,
+                    color: item.color,
+                    price: item.price,
+                    qty: item.qty,
+                    productId: item.productId,
+                }
                 // console.log(item);
 
-                dispatch(addProduct(item));
+                dispatch(addProduct(value));
             } else {
                 message.error('Please choice a product add to cart');
             }
@@ -156,7 +181,7 @@ const ProductDetail = ({ pageProps }: any) => {
                                 </div>
                                 <div>
                                     <Tag color={subProductSelected.qty > 0 ? 'success' : 'error'}>
-                                        {subProductSelected.qty > 0 ? 'In Stock' : 'Out of Stock'}
+                                        {subProductSelected.qty > 0 ? `In Stock(${instockQuantity})` : 'Out of Stock'}
                                     </Tag>
                                 </div>
                             </div>
@@ -240,8 +265,6 @@ const ProductDetail = ({ pageProps }: any) => {
                             <div className="mt-3 parent-in-deQuantityOfDetailProduct">
                                 <Space>
                                     {renderButtonGroup()}
-
-
                                     <Button icon={<BiHeart size={20} />} />
                                 </Space>
                             </div>

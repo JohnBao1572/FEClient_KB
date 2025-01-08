@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { StringLiteral } from "typescript";
 import { localDataName } from "../../constants/appInfos";
 import { SubProductModel } from "@/models/Product";
+import handleAPI from "@/apis/handleAPI";
 
 const innitState: SubProductModel[] = [];
 
@@ -18,13 +19,14 @@ const cartSlice = createSlice({
 
             const index = items.findIndex((element) => element._id === item._id);
 
-            if(index !== -1){
+            if (index !== -1) {
                 items[index].count += item.count;
-            } else{
+            } else {
                 items.push(item)
             }
 
             state.data = items
+            
         },
     },
 });
@@ -32,4 +34,6 @@ const cartSlice = createSlice({
 export const cartReducer = cartSlice.reducer;
 export const { addProduct } = cartSlice.actions;
 
-export const cartSelector = (state:any) => state.cartReducer.data;
+export const cartSelector = (state: any) => state.cartReducer.data;
+
+
