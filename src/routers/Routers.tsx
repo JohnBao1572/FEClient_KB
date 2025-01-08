@@ -8,6 +8,7 @@ import AuthRouter from './AuthRouter'
 import type { AppProps } from 'next/app'
 import { usePathname } from 'next/navigation'
 import HeaderComponent from '@/components/HeaderComponent'
+import handleAPI from '@/apis/handleAPI'
 
 
 const { Content, Footer, Header } = Layout
@@ -20,17 +21,39 @@ const Routers = ({ Component, pageProps }: any) => {
   const dispatch = useDispatch();
 
   const path = usePathname();
-  console.log(path);
+  // console.log(path);
 
   useEffect(() => {
     getData();
   }, []);
-
   
+  useEffect(() =>{
+    getDatabaseDatas();
+  }, [auth])
 
   const getData = async () => {
     const res = localStorage.getItem(localDataName.authData);
     res && dispatch(addAuth(JSON.parse(res)));
+  }
+
+  const getDatabaseDatas = async () => {
+    setIsLoading(true);
+    try {
+      if(auth._id){
+        await getCardInDatabase();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const getCardInDatabase = async() =>{
+    const api = `/carts`;
+    console.log(api)
+    const res = await handleAPI({url: api});
+    console.log(res);
   }
 
   const renderContent = (
@@ -50,7 +73,7 @@ const Routers = ({ Component, pageProps }: any) => {
     <Layout className='bg-white'>
       <HeaderComponent />
       {renderContent}
-      <Footer />
+      <Footer className='bg-white'/>
     </Layout>
   )
 }

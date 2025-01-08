@@ -63,20 +63,23 @@ const ProductDetail = ({ pageProps }: any) => {
     const handleCart = async () => {
         if (auth._id && auth.accesstoken) {
             if (subProductSelected) {
-                const item = subProductSelected;
-                const value = {
-                    createdBy: item.createdBy,
-                    count:item.count,
-                    subProductId: item._id,
-                    size: item.size,
-                    color: item.color,
-                    price: item.price,
-                    qty: item.qty,
-                    productId: item.productId,
-                }
+                // const item = subProductSelected;
+                // const value = {
+                //     createdBy: item.createdBy,
+                //     count:item.count,
+                //     subProductId: item._id,
+                //     size: item.size,
+                //     color: item.color,
+                //     price: item.price,
+                //     qty: item.qty,
+                //     productId: item.productId,
+                // }
+                const item = {...subProductSelected, createdBy: auth._id, count};
+
                 // console.log(item);
 
-                dispatch(addProduct(value));
+                // dispatch(addProduct(value));
+                dispatch(addProduct(item));
             } else {
                 message.error('Please choice a product add to cart');
             }
