@@ -26,8 +26,8 @@ const Routers = ({ Component, pageProps }: any) => {
   useEffect(() => {
     getData();
   }, []);
-  
-  useEffect(() =>{
+
+  useEffect(() => {
     getDatabaseDatas();
   }, [auth])
 
@@ -39,7 +39,7 @@ const Routers = ({ Component, pageProps }: any) => {
   const getDatabaseDatas = async () => {
     setIsLoading(true);
     try {
-      if(auth._id){
+      if (auth._id) {
         await getCardInDatabase();
       }
     } catch (error) {
@@ -49,16 +49,16 @@ const Routers = ({ Component, pageProps }: any) => {
     }
   }
 
-  const getCardInDatabase = async() =>{
+  const getCardInDatabase = async () => {
     const api = `/carts`;
-    console.log(api)
-    const res = await handleAPI({url: api});
+ 
+    const res = await handleAPI({ url: api });
     console.log(res);
   }
 
   const renderContent = (
     <Content>
-      <Component pageProps= {pageProps}/>
+      <Component pageProps={pageProps} />
     </Content>
   )
 
@@ -73,7 +73,7 @@ const Routers = ({ Component, pageProps }: any) => {
     <Layout className='bg-white'>
       <HeaderComponent />
       {renderContent}
-      <Footer className='bg-white'/>
+      <Footer className='bg-white' />
     </Layout>
   )
 }

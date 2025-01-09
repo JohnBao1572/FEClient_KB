@@ -4,19 +4,19 @@ import Head from 'next/head';
 import React from 'react'
 
 interface Props {
-    title?: string,
-    description?: string,
-    url?: string,
-    imageUrl?: string,
+	title?: string,
+	description?: string,
+	url?: string,
+	imageUrl?: string,
 }
 
-const HeadComponents = (props:Props) => {
-    const {title, description, url, imageUrl} = props;
+const HeadComponents = (props: Props) => {
+	const { title, description, url, imageUrl } = props;
 
-    return (
-        // Hỗ trợ seo
-        <Head>
-            <title>{title ? title : appInfo.title}</title>
+	return (
+		// Hỗ trợ seo
+		<Head>
+			<title>{title ? title : appInfo.title}</title>
 			<meta name='title' content={title ? title : appInfo.title} />
 			<meta
 				name='description'
@@ -45,8 +45,8 @@ const HeadComponents = (props:Props) => {
 				content={description ? description : appInfo.description}
 			/>
 			<meta name='twitter:image' content={imageUrl ?? ''} />
-        </Head>
-    )
+		</Head>
+	)
 }
 
 export default HeadComponents

@@ -17,26 +17,30 @@ const HeaderComponent = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const cart: SubProductModel[] = useSelector(cartSelector);
-  console.log(cart)
+  // console.log(cart)
 
   useEffect(() => {
     cart.length > 0 && handleUpdateCartToDatabase(cart)
-  }, [cart])
-  const handleUpdateCartToDatabase = async (data: SubProductModel[]) => {
+  }, [cart,auth])
+
+  const handleUpdateCartToDatabase = async (data: any[]) => {
+    // console.log(data);
     data.forEach(async (item) => {
+      
       const api = `/carts/add-cart${item._id ? `?id=${item._id}` : ''}`;
       const value = {
         createdBy: item.createdBy,
         count: item.count,
-        subProductId: item._id,
+        subProductId: item.subProductId,
         size: item.size,
         color: item.color,
         price: item.price,
         qty: item.qty,
         productId: item.productId,
       }
-
       try {
+        // console.log(value)
+        // console.log(api);
         const res = await handleAPI({ url: api, data: value, method: 'post', })
         console.log(res)
       } catch (error: any) {
@@ -44,6 +48,48 @@ const HeaderComponent = () => {
       }
     })
   }
+
+  // // Đồng bộ giỏ hàng với cơ sở dữ liệu khi có thay đổi
+  // useEffect(() => {
+  //   cart.length > 0 && handleUpdateCartToDatabase(cart)
+  // }, [cart, auth]);
+  // const handleUpdateCartToDatabase = async (data: any) => {
+  //   // Lặp qua từng sản phẩm trong giỏ hàng
+  //   for (const item of data) {
+  //     const { createdBy, count, _id, size, color, price, qty } = item;
+
+  //     // Kiểm tra dữ liệu của sản phẩm trước khi gửi lên API
+  //     if (!count || !_id || !size || !color || !price || !qty) {
+  //       console.error('Dữ liệu sản phẩm không đầy đủ:', item);
+  //       continue;
+  //     }
+
+  //     const api = `/carts/add-cart${_id ? `?id=${_id}` : ''}`;
+  //     const value = {
+  //       createdBy: createdBy || auth._id,
+  //       count: item.count,
+  //       subProductId: item._id,
+  //       size: item.size,
+  //       color: item.color,
+  //       price: item.price,
+  //       qty: item.qty,
+  //       productId: item.productId,
+  //     };
+
+  //     try {
+  //       // Gửi yêu cầu lên API
+  //       const res = await handleAPI({ url: api, data: value, method: 'post' });
+  //       console.log('API Response:', res);
+
+  //       // Kiểm tra phản hồi từ API
+  //       if (!res || res.data?.status !== 'success') {
+  //         console.error('Đồng bộ sản phẩm thất bại:', value);
+  //       }
+  //     } catch (error) {
+  //       console.error('Lỗi khi đồng bộ giỏ hàng:', error);
+  //     }
+  //   }
+  // };
 
   return (
     <Affix offsetTop={0}>

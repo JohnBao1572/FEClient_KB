@@ -24,6 +24,11 @@ const ProductDetail = ({ pageProps }: any) => {
 
     const [detail, setDetail] = useState<ProductModel>(product);
     const [subProductSelected, setSubProductSelected] = useState<SubProductModel>(subProducts[0] ?? []);
+    // const [subProductSelected, setSubProductSelected] = useState<SubProductModel>({
+    //     ...(subProducts[0] ?? {}),
+    //     count: 1,
+    // });
+    
     const auth = useSelector(authSelector);
     const [count, setCount] = useState(1);
     const router = useRouter();
@@ -36,6 +41,9 @@ const ProductDetail = ({ pageProps }: any) => {
         if (subProducts.length > 0) {
             setSubProductSelected({
                 ...subProducts[0],
+
+                count: subProducts[0]?.count || 1,
+
                 imgURL: subProducts[0].images.length > 0 ? subProducts[0].images[0] : ''
             })
         }
@@ -52,8 +60,8 @@ const ProductDetail = ({ pageProps }: any) => {
             if (item) {
                 const qty = subProductSelected?.qty - item.count
                 setInstockQuantity(qty);
-                console.log(qty);
-            } else{
+                // console.log(qty);
+            } else {
                 setInstockQuantity(subProductSelected?.qty);
             }
         }
@@ -65,21 +73,41 @@ const ProductDetail = ({ pageProps }: any) => {
             if (subProductSelected) {
                 // const item = subProductSelected;
                 // const value = {
-                //     createdBy: item.createdBy,
-                //     count:item.count,
-                //     subProductId: item._id,
-                //     size: item.size,
-                //     color: item.color,
-                //     price: item.price,
-                //     qty: item.qty,
-                //     productId: item.productId,
-                // }
-                const item = {...subProductSelected, createdBy: auth._id, count};
-
+                // 	createdBy: auth._id,
+                // 	count: item.count,
+                // 	subProductId: item._id,
+                // 	size: item.size,
+                // 	title: detail.title,
+                // 	color: item.color,
+                // 	price: item.discount ? item.discount : item.price,
+                // 	qty: item.qty,
+                // 	productId: item.productId,
+                // 	image: item.images[0] ?? '',
+                // };
+                // const item = { ...subProductSelected, createdBy: auth._id, count };
+                // const item = { ...subProductSelected, createdBy: auth._id, count: subProductSelected.count };
                 // console.log(item);
 
                 // dispatch(addProduct(value));
-                dispatch(addProduct(item));
+                // dispatch(addProduct(item));
+                const { _id, size, color, price, qty, productId, images, count,} = subProductSelected;
+
+                if (!_id || !count || !size || !color || !price || !qty) {
+                    return message.error('Thông tin sản phẩm không đầy đủ. Vui lòng chọn lại sản phẩm.');
+                }
+                const item = {
+                    createdBy:auth._id,
+                    count,
+                    subProductId: _id,
+                    size,
+                    color,
+                    price,
+                    qty,
+                    productId,
+                    image: images?.[0] ?? '',
+                };
+                console.log(item);
+                // dispatch(addProduct(item))
             } else {
                 message.error('Please choice a product add to cart');
             }
@@ -89,29 +117,61 @@ const ProductDetail = ({ pageProps }: any) => {
         }
     }
 
+    // const renderButtonGroup = () => {
+    //     const item = cart.find(element => element._id === subProductSelected?._id)
+    //     return (
+    //         subProductSelected && (
+    //             <>
+    //                 <div className='in-deQuantityOfDetailProduct' >
+    //                     <Button onClick={() => setCount(count + 1)}
+    //                         disabled={count === (item ? subProductSelected.qty = item.count : subProductSelected.qty)}
+    //                         icon={<IoAddSharp size={22} />} />
+    //                     <Text className='text-in-deQuantityOfDetailProduct'>{count}</Text>
+    //                     <Button onClick={() => setCount(count - 1)} disabled={count === 1} icon={<LuMinus size={22} />} />
+    //                 </div >
+
+    //                 <Button type='primary' style={{ minWidth: 200, height: 55 }}
+    //                     onClick={handleCart}
+    //                     disabled={item?.count === subProductSelected.qty}>
+    //                     Add to Cart
+    //                 </Button>
+    //             </>
+
+    //         )
+    //     )
+    // }
+
     const renderButtonGroup = () => {
-        const item = cart.find(element => element._id === subProductSelected?._id)
+        const item = cart.find(element => element._id === subProductSelected?._id);
+        const maxQty = item ? subProductSelected.qty - item.count : subProductSelected.qty;
+    
         return (
             subProductSelected && (
                 <>
-                    <div className='in-deQuantityOfDetailProduct' >
-                        <Button onClick={() => setCount(count + 1)}
-                            disabled={count === (item ? subProductSelected.qty = item.count : subProductSelected.qty)}
-                            icon={<IoAddSharp size={22} />} />
+                    <div className='in-deQuantityOfDetailProduct'>
+                        <Button
+                            onClick={() => setCount(count + 1)}
+                            disabled={count >= maxQty} // Ngăn tăng nếu đạt số lượng tối đa
+                            icon={<IoAddSharp size={22} />}
+                        />
                         <Text className='text-in-deQuantityOfDetailProduct'>{count}</Text>
-                        <Button onClick={() => setCount(count - 1)} disabled={count === 1} icon={<LuMinus size={22} />} />
-                    </div >
-
-                    <Button type='primary' style={{ minWidth: 200, height: 55 }}
+                        <Button
+                            onClick={() => setCount(count - 1)}
+                            disabled={count <= 1} // Ngăn giảm nếu đạt số lượng tối thiểu
+                            icon={<LuMinus size={22} />}
+                        />
+                    </div>
+                    <Button
+                        type='primary'
+                        style={{ minWidth: 200, height: 55 }}
                         onClick={handleCart}
-                        disabled={item?.count === subProductSelected.qty}>
+                        disabled={count >= maxQty}>
                         Add to Cart
                     </Button>
                 </>
-
             )
-        )
-    }
+        );
+    };
 
     return subProductSelected ? (
         <div>
@@ -230,9 +290,9 @@ const ProductDetail = ({ pageProps }: any) => {
                                     Colors
                                 </Paragraph>
                                 <Space>
-                                    {subProducts.length > 0 && subProducts.map((item) => (
+                                    {subProducts.length > 0 && subProducts.map((item, index) => (
                                         <a onClick={() => setSubProductSelected(item)}>
-                                            <div key={item._id}
+                                            <div key={`${item._id} - ${index}`}
                                                 style={{
                                                     background: item.color,
                                                 }}
