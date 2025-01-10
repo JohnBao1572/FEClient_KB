@@ -28,7 +28,7 @@ const ProductDetail = ({ pageProps }: any) => {
     //     ...(subProducts[0] ?? {}),
     //     count: 1,
     // });
-    
+
     const auth = useSelector(authSelector);
     const [count, setCount] = useState(1);
     const router = useRouter();
@@ -84,19 +84,15 @@ const ProductDetail = ({ pageProps }: any) => {
                 // 	productId: item.productId,
                 // 	image: item.images[0] ?? '',
                 // };
-                // const item = { ...subProductSelected, createdBy: auth._id, count };
-                // const item = { ...subProductSelected, createdBy: auth._id, count: subProductSelected.count };
-                // console.log(item);
 
-                // dispatch(addProduct(value));
                 // dispatch(addProduct(item));
-                const { _id, size, color, price, qty, productId, images, count,} = subProductSelected;
+                const { _id, size, color, price, qty, productId, images, count, } = subProductSelected;
 
                 if (!_id || !count || !size || !color || !price || !qty) {
                     return message.error('Thông tin sản phẩm không đầy đủ. Vui lòng chọn lại sản phẩm.');
                 }
                 const item = {
-                    createdBy:auth._id,
+                    createdBy: auth._id,
                     count,
                     subProductId: _id,
                     size,
@@ -106,8 +102,8 @@ const ProductDetail = ({ pageProps }: any) => {
                     productId,
                     image: images?.[0] ?? '',
                 };
-                console.log(item);
-                // dispatch(addProduct(item))
+                // console.log(item);
+                dispatch(addProduct(item))
             } else {
                 message.error('Please choice a product add to cart');
             }
@@ -144,7 +140,7 @@ const ProductDetail = ({ pageProps }: any) => {
     const renderButtonGroup = () => {
         const item = cart.find(element => element._id === subProductSelected?._id);
         const maxQty = item ? subProductSelected.qty - item.count : subProductSelected.qty;
-    
+
         return (
             subProductSelected && (
                 <>
@@ -292,7 +288,7 @@ const ProductDetail = ({ pageProps }: any) => {
                                 <Space>
                                     {subProducts.length > 0 && subProducts.map((item, index) => (
                                         <a onClick={() => setSubProductSelected(item)}>
-                                            <div key={`${item._id} - ${index}`}
+                                            <div key={`${item.color} - ${index}`}
                                                 style={{
                                                     background: item.color,
                                                 }}
@@ -313,7 +309,7 @@ const ProductDetail = ({ pageProps }: any) => {
                                 <Space>
                                     {subProducts.length > 0 && subProducts.map((item) => (
                                         <a onClick={() => setSubProductSelected(item)}>
-                                            <div key={item._id}>
+                                            <div key={item.size}>
                                                 <Button
                                                     type={subProductSelected.size === item.size ? 'primary' : 'default'}
                                                     onClick={() => setSubProductSelected(item)}>

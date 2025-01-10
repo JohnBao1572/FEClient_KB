@@ -3,6 +3,7 @@ import { ProductModel } from '@/models/Product'
 import { VND } from '@/utils/handleCurrency';
 import { Button, Space, Typography } from 'antd';
 import Link from 'next/link';
+import { Router, useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
 import { BsEye } from 'react-icons/bs';
 import { FaStar } from 'react-icons/fa';
@@ -20,6 +21,7 @@ const ProductItem = (props: Props) => {
     const { item } = props;
     const [elementWidth, setElementWidth] = useState();
     const ref = useRef<any>();
+    const router = useRouter();
 
     useEffect(() => {
         const width = ref.current?.offsetWidth;
@@ -27,6 +29,7 @@ const ProductItem = (props: Props) => {
     })
 
     console.log(item);
+
 
 
     return (
@@ -69,7 +72,10 @@ const ProductItem = (props: Props) => {
                 </div>
 
                 <div className='text-center'>
-                    <Button className='btn-addCart text-center' style={{ width: '80%' }}>Add to Cart</Button>
+                    <Button className='btn-addCart text-center' style={{ width: '80%' }}
+                    onClick={() => router.push(`/products/${item.slug}/${item._id}`)}>
+                        Add to Cart
+                    </Button>
                 </div>
             </div>
 
