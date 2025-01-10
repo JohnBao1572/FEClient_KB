@@ -72,6 +72,10 @@
   padding: 0 15px;
 }
 
+.NextBiHeart{
+  border: 1px solid blue;
+}
+
 /* Thuộc tính này của nút tăng giảm trong ProductItemDetail */
 :where(.css-dev-only-do-not-override-dz3jpi).ant-btn.ant-btn-icon-only {
   border: none;

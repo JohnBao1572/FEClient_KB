@@ -6,6 +6,7 @@ import { authSelector } from '@/reduxs/reducers/authReducer';
 import { addProduct, cartSelector } from '@/reduxs/reducers/cartReducer';
 import { VND } from '@/utils/handleCurrency';
 import { Breadcrumb, Button, Carousel, message, Rate, Space, Tag, Typography } from 'antd';
+import next from 'next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation'
 import { useRouter } from 'next/router';
@@ -24,11 +25,6 @@ const ProductDetail = ({ pageProps }: any) => {
 
     const [detail, setDetail] = useState<ProductModel>(product);
     const [subProductSelected, setSubProductSelected] = useState<SubProductModel>(subProducts[0] ?? []);
-    // const [subProductSelected, setSubProductSelected] = useState<SubProductModel>({
-    //     ...(subProducts[0] ?? {}),
-    //     count: 1,
-    // });
-
     const auth = useSelector(authSelector);
     const [count, setCount] = useState(1);
     const router = useRouter();
@@ -89,7 +85,7 @@ const ProductDetail = ({ pageProps }: any) => {
                 const { _id, size, color, price, qty, productId, images, count, } = subProductSelected;
 
                 if (!_id || !count || !size || !color || !price || !qty) {
-                    return message.error('Thông tin sản phẩm không đầy đủ. Vui lòng chọn lại sản phẩm.');
+                    return message.error('Product information is incomplete. Please select the product again.');
                 }
                 const item = {
                     createdBy: auth._id,
@@ -113,30 +109,6 @@ const ProductDetail = ({ pageProps }: any) => {
         }
     }
 
-    // const renderButtonGroup = () => {
-    //     const item = cart.find(element => element._id === subProductSelected?._id)
-    //     return (
-    //         subProductSelected && (
-    //             <>
-    //                 <div className='in-deQuantityOfDetailProduct' >
-    //                     <Button onClick={() => setCount(count + 1)}
-    //                         disabled={count === (item ? subProductSelected.qty = item.count : subProductSelected.qty)}
-    //                         icon={<IoAddSharp size={22} />} />
-    //                     <Text className='text-in-deQuantityOfDetailProduct'>{count}</Text>
-    //                     <Button onClick={() => setCount(count - 1)} disabled={count === 1} icon={<LuMinus size={22} />} />
-    //                 </div >
-
-    //                 <Button type='primary' style={{ minWidth: 200, height: 55 }}
-    //                     onClick={handleCart}
-    //                     disabled={item?.count === subProductSelected.qty}>
-    //                     Add to Cart
-    //                 </Button>
-    //             </>
-
-    //         )
-    //     )
-    // }
-
     const renderButtonGroup = () => {
         const item = cart.find(element => element._id === subProductSelected?._id);
         const maxQty = item ? subProductSelected.qty - item.count : subProductSelected.qty;
@@ -159,7 +131,7 @@ const ProductDetail = ({ pageProps }: any) => {
                     </div>
                     <Button
                         type='primary'
-                        style={{ minWidth: 200, height: 55 }}
+                        style={{ minWidth: 180, height: 40 }}
                         onClick={handleCart}
                         disabled={count >= maxQty}>
                         Add to Cart
@@ -324,7 +296,7 @@ const ProductDetail = ({ pageProps }: any) => {
                             <div className="mt-3 parent-in-deQuantityOfDetailProduct">
                                 <Space>
                                     {renderButtonGroup()}
-                                    <Button icon={<BiHeart size={20} />} />
+                                    <Button icon={<BiHeart size={20} style={{border: '1'}} />} className='NextBiHeart'/>
                                 </Space>
                             </div>
                         </div>
