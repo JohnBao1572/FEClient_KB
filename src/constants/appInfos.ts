@@ -2,7 +2,7 @@
 
 import { title } from "process";
 
-export const localDataName = {
+export const localDataNames = {
     authData: 'authData',
 };
 
@@ -11,5 +11,19 @@ export const appInfo = {
 
     title: 'Bảo Thanh',
     description: '',
-    baseURL: 'http://localhost:5000',
+    baseUrl: 'http://localhost:5000',
+    monthShortNames: [
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sept',
+		'Oct',
+		'Nov',
+		'Dec',
+	],
 }

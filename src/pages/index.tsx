@@ -1,271 +1,98 @@
-import handleAPI from '@/apis/handleAPI'
-import { ProductItem, TabbarComponent } from '@/components'
-import HeadComponents from '@/components/HeadComponents'
-import HeaderComponent from '@/components/HeaderComponent'
-import { appInfo } from '@/constants/appInfos'
-import { CategoyModel, ProductModel } from '@/models/Product'
-import { PromotionModel } from '@/models/PromotionModels'
-import { authSelector } from '@/reduxs/reducers/authReducer'
-import { Button, Card, Carousel, Space, Typography } from 'antd'
-import { CarouselRef } from 'antd/es/carousel'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
-import { BsArrow90DegLeft, BsArrowLeft, BsArrowRight } from 'react-icons/bs'
-import { useSelector } from 'react-redux'
-import { workerData } from 'worker_threads'
+/** @format */
 
-const { Title } = Typography;
 
-const HomePage = (data: any) => {
-  const pageProps = data.pageProps;
-  const { promotions, categories, bestSellers }: { promotions: PromotionModel[], categories: CategoyModel[], bestSellers: ProductModel[] } = pageProps;
-  const [isLoading, setIsLoading] = useState(false);
-  const [numOfColumn, setNumOfColumn] = useState(4);
-  const [catsArrays, setCatsArrays] = useState<
-    {
-      key: string;
-      values: CategoyModel[];
-    }[]
-  >([]);
-  const catSliceRef = useRef<CarouselRef>(null);
-  const router = useRouter();
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import HomePage from './HomePage';
+import { appInfo } from '@/constants/appInfos';
+import Login from './auth/login';
 
-  //Hiển thị các (cates) thẻ cha ra màn hình còn (catesCon) thì không xuất hiện
-  const catsFilter = categories.length > 0 ? categories.filter((element) => !element.parentId) : [];
-  // const catsFilter = Array.isArray(categories) && categories.length > 0
-  //   ? categories.filter((element) => !element.parentId)
-  //   : [];
-  // console.log(catsFilter)
+import { Empty, Skeleton } from 'antd';
+import { PromotionModel } from '@/models/PromotionModels';
+import { CategoyModel, ProductModel } from '@/models/Product';
+import handleAPI from '@/apis/handleAPI';
 
-  // Đăng ký một sự kiện lắng nghe khi cửa sổ trình duyệt được thay đổi kích thước.
-  // Mỗi lần trình duyệt thay đổi kích thước, hàm callback được gọi.
-  useEffect(() => {
-    window.addEventListener('resize', (event) => {
-      const width = window.innerWidth;
-      const index = width <= 480 ? 2 : width <= 768 ? 3 : 4;
+const Home = (data: any) => {
+	const pageProps = data.pageProps;
 
-      setNumOfColumn(index);
-    });
-    return () => window.removeEventListener('resize', () => { })
-  }, [])
+	const [promotions, setPromotions] = useState<PromotionModel[]>([]);
+	const [categories, setCategories] = useState<CategoyModel[]>([]);
+	const [bestSellers, setBestSellers] = useState<ProductModel[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const item: any[] = [];
+	useEffect(() => {
+		getDatas();
+	}, []);
 
-    // Làm Math.ceil làm tròn số lên
-    const numOfDatas = Math.ceil(catsFilter.length / numOfColumn);
+	const getDatas = async () => {
+		setIsLoading(true);
+		try {
+			await getPromotions();
+			await getCategories();
+			await getProducts();
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-    for (let index = 0; index < numOfDatas; index++) {
-      // Cách hoạt động của slice: (array.splice(start, deleteCount))
-      const values = catsFilter.slice(0, numOfColumn);
+	const getPromotions = async () => {
+		const res = await handleAPI({ url: `/promotions?limit=5` });
 
-      item.push({
-        // Tạo một chuỗi duy nhất cho mỗi đối tượng.
-        // Ví dụ: Khi index = 0, key sẽ là "array0". Khi index = 1, key sẽ là "array1", và cứ tiếp tục
-        key: `array${index}`,
+		res && res.data && res.data.data && setPromotions(res.data.data);
+	};
 
-        // Nếu values = ["Cat1", "Cat2", "Cat3"], thì nhóm này được gắn với key tương ứng như "array0".
-        values,
-      })
-    }
-    setCatsArrays(item);
-  }, [numOfColumn])
+	const getCategories = async () => {
+		const res = await handleAPI({ url: `/products/get-categories` });
+		res && res.data && res.data.data && setCategories(res.data.data);
+	};
 
-  console.log(catsArrays);
+	const getProducts = async () => {
+		const res = await handleAPI({ url: `/products/get-best-seller` });
+		res && res.data && res.data.data && setBestSellers(res.data.data);
+	};
 
-  if (!Array.isArray(catsArrays) || catsArrays.length === 0) {
-    return <div>Không có dữ liệu để hiển thị.</div>;
-  }
+	return isLoading ? (
+		<Skeleton />
+	) : (
+		<HomePage
+			promotions={promotions}
+			categories={categories}
+			bestSellers={bestSellers}
+		/>
+	);
+};
 
-  // console.log(bestSellers);
-
-  return (
-    <>
-      <HeadComponents title='BaoThanh Fashion' />
-      {/* <Button onClick={() => console.log(bestSellers)}>Get seller</Button> */}
-
-      <div className="container-fluid bg-light d-none d-md-block">
-        <div className="container">
-          {promotions && promotions.length > 0 ? (
-            <Carousel
-              style={{
-                width: '100%',
-                height: 500,
-              }}
-            >
-              {promotions.map((item) => (
-                // Dùng (map) là phải có key
-                <div key={item._id}>
-                  <img
-                    src={item.imageURL}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      objectFit: 'cover',
-                      maxHeight: 500,
-                    }}
-                    alt=""
-                  />
-                  <div
-                    style={{
-                      backgroundColor: 'coral !important',
-                      position: 'absolute',
-                      top: '50%',
-                      left: 20,
-                      zIndex: 10,
-                      padding: '10px',
-                    }}
-                  >
-                    <Title className="m-0" style={{ color: 'white' }}>{item.title}</Title>
-                    <Title
-                      level={3}
-                      className="m-0"
-                      style={{
-                        fontWeight: 300,
-                        color: 'white',
-                      }}
-                    >
-                      Up to {item.value} {item.type === 'percent' ? '%' : ''}
-                    </Title>
-                    <div className="mt-4">
-                      <Button
-                        iconPosition="end"
-                        size="large"
-                        style={{ backgroundColor: 'black', color: 'white' }}
-                        icon={<BsArrowRight size={18}/>}>
-                        Shop now
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Carousel>) : (
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <Title level={3}>No promotions available</Title>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="container" style={{ position: 'relative' }}>
-        <TabbarComponent title={'Shop category'}
-          right={
-            <Space>
-              <Button onClick={() => catSliceRef.current?.prev()}
-                icon={<BsArrowLeft size={18} />} />
-
-              <Button onClick={() => catSliceRef.current?.next()}
-                icon={<BsArrowRight size={18} />} />
-            </Space>
-          } />
-        <Carousel autoplay
-          speed={2000}
-          ref={catSliceRef}
-          initialSlide={0}>
-          {catsArrays.map((array) => (
-            <div>
-              <div className='row' key={array.key}>
-                {array.values.map((item) => (
-                  <div className='col' key={item._id || item.title || Math.random()}>
-                    {
-                      <div>
-                        <img src={item.image ?? 'https://inkythuatso.com/uploads/thumbnails/800/2023/03/1-hinh-anh-ngay-moi-hanh-phuc-sieu-cute-inkythuatso-09-13-35-50.jpg'}
-                          alt={item.title ?? 'Image have not a title'}
-                          style={{ width: '100%', maxHeight: 180, borderRadius: 12 }} />
-
-                        <div className='text-center'
-                          style={{
-                            position: 'absolute',
-                            bottom: 10,
-                            right: 10,
-                            left: 10,
-                          }}>
-                          <Button style={{ width: '80%' }} size='large'
-                            onClick={() => router.push(`/filterProduct?catId=${item._id}`)}>
-                            {item.title}
-                          </Button>
-                        </div>
-                      </div>
-                    }
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </Carousel>
-      </div>
-
-      <div className='container'>
-        <TabbarComponent title='Our best seller' />
-        <div className="row">
-          {bestSellers.map((item) => (
-            <ProductItem item={item} key={item._id} />
-          ))}
-        </div>
-      </div>
-    </>
-  )
-}
-
-export default HomePage
-
-// export async function getStaticProps() {
-//   // Dữ liệu mẫu để tránh lỗi khi không có dữ liệu từ API
-//   const promotions = [
-//     { _id: '1', imageURL: '/images/sample1.jpg', title: 'Giảm giá 50%', value: 50, type: 'percent' },
-//     { _id: '2', imageURL: '/images/sample2.jpg', title: 'Mua 1 tặng 1', value: 1, type: 'amount' },
-//   ];
-
-//   return {
-//     props: {
-//       promotions, // Trả về dữ liệu mẫu để khởi tạo component
-//     },
-//   };
-// }
+export default Home;
 
 export const getStaticProps = async () => {
   try {
-    // Hàm fetch trả về một đối tượng Response. Bạn cần gọi .json() để chuyển đổi dữ liệu trả về thành JSON.
+      const res = await fetch(`${appInfo.baseUrl}/promotions?limit=5`);
+      const result = await res.json();
 
-    // Với fetch, bạn cần xử lý .json() để lấy dữ liệu từ phản hồi.
-    // axios tự động chuyển đổi phản hồi JSON thành đối tượng JavaScript.
+      const resCats = await fetch(`${appInfo.baseUrl}/products/get-categories`);
+      const resultCats = await resCats.json();
 
-    const response = await fetch(`${appInfo.baseURL}/promotions/get-promotions?limit=5`);
-    const responseCats = await fetch(`${appInfo.baseURL}/products/get-categories`);
-    const responseBestSellers = await fetch(`${appInfo.baseURL}/products/get-best-seller`);
+      const resBestSeller = await fetch(
+          `${appInfo.baseUrl}/products/get-best-seller`
+      );
+      const resultsSeller = await resBestSeller.json();
 
-    // const response = await fetch(`http://localhost:5000/promotions/get-promotions`);
-    // const { data } = await axios.get('http://localhost:5000/promotions/get-promotions');
-    if (!response.ok) {
-      throw new Error(`Failed to fetch promotions: ${response.statusText}`);
-    }
-
-    const promotions = await response.json();
-    const data = promotions?.data || [];
-
-    const resultCats = await responseCats.json();
-    const dataCats = resultCats?.data || [];
-
-    const resultsSeller = await responseBestSellers.json();
-    const dataSellers = resultsSeller?.data || [];
-
-    return {
-      props: {
-        promotions: data,
-        categories: dataCats,
-        bestSellers: dataSellers,
-      },
-    };
+      return {
+          props: {
+              promotions: result.data || null,
+              categories: resultCats.data || null,
+              bestSellers: resultsSeller.data || null,
+          },
+      };
   } catch (error) {
-    console.error("Error fetching promotions:", error);
-    return {
-      props: {
-        data: {
-          promotions: [], // Trả về một mảng trống để tránh lỗi khi render.
-        },
-      },
-    };
+      return {
+          props: {
+              promotions: null,
+              categories: null,
+              bestSellers: null,
+          },
+      };
   }
 };
-

@@ -2,10 +2,10 @@ import axios from "axios";
 import { error } from "console";
 import { config } from "process";
 import queryString from "query-string";
-import { appInfo, localDataName } from "../constants/appInfos";
+import { appInfo } from "../constants/appInfos";
 
 const axiosClient = axios.create({
-    baseURL: appInfo.baseURL,
+    baseURL: appInfo.baseUrl,
     // paramsSerializer: (params) => queryString.stringify(params),
     paramsSerializer: (params) => queryString.stringify(params),
 });

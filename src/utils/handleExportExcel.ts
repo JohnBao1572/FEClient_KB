@@ -1,10 +1,12 @@
-import {utils,writeFileXLSX} from 'xlsx';
+/** @format */
 
-export const hanldExportExcel = async(data:any, name?: string) =>{
-    const ws = utils.json_to_sheet(data);
-    const wb = utils.book_new();
+import { utils, writeFileXLSX } from 'xlsx';
 
-    utils.book_append_sheet(wb,ws,'data');
+export const hanldExportExcel = async (data: any[], name?: string) => {
+	const ws = utils.json_to_sheet(data);
+	const wb = utils.book_new();
 
-    writeFileXLSX(wb, `${name?name: `Kanban-data-${Date.now()}`}.xlsx`);
+	utils.book_append_sheet(wb, ws, `data`);
+
+	writeFileXLSX(wb, `${name ? name : `Kanban-data-${Date.now()}`}.xlsx`);
 };
