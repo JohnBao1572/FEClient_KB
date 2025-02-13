@@ -1,5 +1,3 @@
-/** @format */
-
 
 import { ProductItem, Sectioin, TabbarComponent } from '@/components';
 import HeadComponents from '@/components/HeadComponents';

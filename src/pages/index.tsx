@@ -38,7 +38,7 @@ const Home = (data: any) => {
 	};
 
 	const getPromotions = async () => {
-		const res = await handleAPI({ url: `/promotions?limit=5` });
+		const res = await handleAPI({ url: `/promotions/get-promotions?limit=5` });
 
 		res && res.data && res.data.data && setPromotions(res.data.data);
 	};
@@ -68,7 +68,7 @@ export default Home;
 
 export const getStaticProps = async () => {
   try {
-      const res = await fetch(`${appInfo.baseUrl}/promotions?limit=5`);
+      const res = await fetch(`${appInfo.baseUrl}/promotions/get-promotions?limit=5`);
       const result = await res.json();
 
       const resCats = await fetch(`${appInfo.baseUrl}/products/get-categories`);
