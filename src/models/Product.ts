@@ -57,3 +57,34 @@ export interface AddressModel {
 	updatedAt: string;
 	__v: number;
 }
+
+export interface BillModel {
+	_id: string;
+	products: ProductModel[];
+	total: number;
+	status: BillStatus;
+	customer_id: string;
+	shippingAddress: AddressModel;
+	paymentStatus: PaymentStatus;
+	paymentMethod: PaymentMethod;
+	createdAt: string;
+	updatedAt: string;
+	__v: number;
+}
+
+/** Trạng thái đơn hàng */
+export enum BillStatus {
+	PENDING = 0, // Chờ xác nhận
+	IN_PROCESS = 1, // Đang xử lý
+	DELIVERED = 2, // Đã giao
+	CANCELED = 3, // Đã hủy
+}
+
+/** Trạng thái thanh toán */
+export enum PaymentStatus {
+	UNPAID = 0, // Chưa thanh toán
+	PAID = 1, // Đã thanh toán
+}
+
+/** Phương thức thanh toán */
+export type PaymentMethod = "cod" | "bank" | "paypal";

@@ -1,4 +1,3 @@
-/** @format */
 
 export const formatNumber = (num: string) =>
 	num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');

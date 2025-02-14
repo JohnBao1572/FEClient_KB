@@ -1,4 +1,3 @@
-/** @format */
 
 import { Button, DatePicker, Form, Input, Typography } from 'antd';
 import React, { useState } from 'react';

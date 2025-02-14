@@ -46,7 +46,7 @@ const HomePage = (props: Props) => {
 			setNumOfColumn(index);
 		});
 
-		return () => window.removeEventListener('resize', () => {});
+		return () => window.removeEventListener('resize', () => { });
 	}, []);
 
 	useEffect(() => {
@@ -134,7 +134,7 @@ const HomePage = (props: Props) => {
 					)}
 				</div>
 			</div>
-			<div className='container'>
+			<div className='container mt-3'>
 				<Sectioin>
 					<TabbarComponent
 						title='Shop by Categories'
@@ -203,15 +203,18 @@ const HomePage = (props: Props) => {
 							))}
 					</Carousel>
 				</Sectioin>
-				<Sectioin>
-					<TabbarComponent title='Our Bestseller' />
-					<div className='row'>
-						{bestSellers &&
-							bestSellers.map((item) => (
-								<ProductItem item={item} key={item._id} />
-							))}
-					</div>
-				</Sectioin>
+				<div className="mt-4">
+					<Sectioin>
+						<TabbarComponent title='Our Bestseller' />
+						<div className='row'>
+							{bestSellers &&
+								bestSellers.map((item) => (
+									<ProductItem item={item} key={item._id} />
+								))}
+						</div>
+					</Sectioin>
+				</div>
+
 			</div>
 		</>
 	);

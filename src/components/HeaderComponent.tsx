@@ -49,6 +49,13 @@ const HeaderComponent = () => {
 			label: <Link href={`/profile`}>Profile</Link>,
 			icon: <FaUser size={18} />,
 		},
+
+		{
+			key: 'My orders',
+			label: <Link href={`/order`}>My Orders</Link>,
+			icon: <FaUser size={18} />,
+		},
+
 		{
 			label: 'SignOut',
 			icon: <BiPowerOff size={22} />,

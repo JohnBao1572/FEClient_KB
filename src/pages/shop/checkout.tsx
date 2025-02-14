@@ -223,8 +223,8 @@ const CheckoutPage = () => {
 
 			Modal.confirm({
 				type: 'success',
-				title: 'Thành công',
-				content: 'Cám ơn bạn đã đặt hàng, đơn hàng của bạn đang được xử lý',
+				title: 'Order successfully',
+				content: 'Thank you for your order, your order is being processed',
 				onOk: () => router.push('/profile?key=orders'),
 				okButtonProps: {
 					title: 'View Order',
