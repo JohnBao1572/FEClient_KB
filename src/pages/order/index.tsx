@@ -1,7 +1,7 @@
 import handleAPI from '@/apis/handleAPI';
-import { BillModel, BillStatus, PaymentStatus } from '@/models/Product';
+import { AddressModel, BillModel, BillStatus, PaymentStatus } from '@/models/Product';
 import { FormatCurrency } from '@/utils/formatNumber';
-import { Button, List, Modal, Table, Tag, Typography } from 'antd';
+import { Alert, Button, List, Modal, Spin, Table, Tag, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FaShoppingBag } from 'react-icons/fa';
 
@@ -95,15 +95,43 @@ const MyOrders = () => {
 
     // Cấu hình bảng
     const columns = [
-        { title: 'Order ID', dataIndex: '_id', key: '_id' },
+        {
+            title: 'Order ID',
+            dataIndex: '_id',
+            key: '_id',
+            render: (_id: string) => <strong>{_id}</strong>,
+        },
+        
+        {
+            title: 'Customer',
+            dataIndex: 'shippingAddress',
+            key: 'name',
+            render: (shippingAddress: AddressModel) =>
+                addresses[shippingAddress?.address]?.name || <em>Unknown</em>,
+        },
+
+        {
+            title: 'Products',
+            dataIndex: 'products',
+            key: 'products',
+            render: (productList: { _id: string; title: string }[]) => (
+                productList?.length
+                    ? productList.map((prod) => <p key={prod._id} style={{ margin: 0 }}>{prod.title}</p>)
+                    : <strong>No products</strong>
+            ),
+        },
+
+        { title: 'Status', dataIndex: 'status', key: 'status', render: getOrderStatusTag },
+
+        { title: 'Payment', dataIndex: 'paymentStatus', key: 'paymentStatus', render: getPaymentStatusTag },
+
         {
             title: 'Total',
             dataIndex: 'total',
             key: 'total',
             render: (total: number) => <strong>{FormatCurrency.VND.format(total)}</strong>,
         },
-        { title: 'Status', dataIndex: 'status', key: 'status', render: getOrderStatusTag },
-        { title: 'Payment', dataIndex: 'paymentStatus', key: 'paymentStatus', render: getPaymentStatusTag },
+
         {
             title: 'Actions',
             key: 'actions',
@@ -115,12 +143,20 @@ const MyOrders = () => {
         },
     ];
 
+
     return (
         <div className="container">
             <Title level={2}>
                 <FaShoppingBag className="mr-2" /> My Orders
             </Title>
-            <Table dataSource={orders} columns={columns} loading={loading} rowKey="_id" pagination={{ pageSize: 5 }} />
+
+            {loading ? (
+                <Spin tip="Loading orders..." />
+            ) : orders.length === 0 ? (
+                <Alert message="No orders found" type="info" />
+            ) : (
+                <Table dataSource={orders} columns={columns} rowKey="_id" pagination={{ pageSize: 5 }} />
+            )}
 
             {/* Modal chi tiết đơn hàng */}
             <Modal title="Order Details" open={isModalVisible} onCancel={handleCancel} footer={null}>
@@ -134,7 +170,7 @@ const MyOrders = () => {
                         {/* Hiển thị địa chỉ giao hàng */}
                         <Title level={5}>Shipping Address:</Title>
                         {addresses[selectedOrder.shippingAddress.address] ? (
-                            <div>
+                            <div className='border p-2 mb-2 flex'>
                                 <p><strong>Name:</strong> {addresses[selectedOrder.shippingAddress.address].name}</p>
                                 <p><strong>Phone:</strong> {addresses[selectedOrder.shippingAddress.address].phoneNumber}</p>
                                 <p><strong>Address:</strong> {addresses[selectedOrder.shippingAddress.address].address}</p>
@@ -145,8 +181,6 @@ const MyOrders = () => {
 
                         {/* Hiển thị danh sách sản phẩm */}
                         <Title level={5}>Products:</Title>
-
-
                         {selectedOrder.products && selectedOrder.products.length > 0 ? (
                             selectedOrder.products.map((product) => (
                                 <div key={product._id} className="border p-2 mb-2 flex">
@@ -161,13 +195,13 @@ const MyOrders = () => {
                                     <div className="ml-3">
                                         <p><strong>{product.title}</strong></p>
                                         <p>Size: {product.size}</p>
-                                        <p>Màu: <span style={{ backgroundColor: product.color, padding: "2px 8px", borderRadius: "4px", display: "inline-block" }}>&nbsp;</span></p>
-                                        <p>Số lượng: {product.qty}</p>
+                                        <p>Color: <span style={{ backgroundColor: product.color, padding: "2px 8px", borderRadius: "4px", display: "inline-block" }}>&nbsp;</span></p>
+                                        <p>Quantity: {product.qty}</p>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p><strong>Không có sản phẩm nào.</strong></p>
+                            <p><strong>No products found.</strong></p>
                         )}
 
 

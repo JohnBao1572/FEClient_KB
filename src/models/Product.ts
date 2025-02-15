@@ -58,18 +58,32 @@ export interface AddressModel {
 	__v: number;
 }
 
+// export interface BillModel {
+// 	_id: string;
+// 	products: ProductModel[];
+// 	total: number;
+// 	status: BillStatus;
+// 	customer_id: string;
+// 	shippingAddress: AddressModel;
+// 	paymentStatus: PaymentStatus;
+// 	paymentMethod: PaymentMethod;
+// 	createdAt: string;
+// 	updatedAt: string;
+// 	__v: number;
+// }
+
 export interface BillModel {
-	_id: string;
-	products: ProductModel[];
-	total: number;
-	status: BillStatus;
-	customer_id: string;
-	shippingAddress: AddressModel;
-	paymentStatus: PaymentStatus;
-	paymentMethod: PaymentMethod;
-	createdAt: string;
-	updatedAt: string;
-	__v: number;
+    _id: string;
+    products: BillProductModel[];
+    total: number;
+    status: BillStatus;
+    customer_id: string;
+    shippingAddress: AddressModel;
+    paymentStatus: PaymentStatus;
+    paymentMethod: PaymentMethod;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
 }
 
 /** Trạng thái đơn hàng */
@@ -88,3 +102,12 @@ export enum PaymentStatus {
 
 /** Phương thức thanh toán */
 export type PaymentMethod = "cod" | "bank" | "paypal";
+
+export interface BillProductModel {
+    _id: string;
+    title: string;
+    size: string;
+    color: string;
+    qty: number;
+    image: string;
+}
