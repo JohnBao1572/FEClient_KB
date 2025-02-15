@@ -219,19 +219,6 @@ const MyOrders = () => {
             <Modal title="Order Details" open={isModalVisible} onCancel={handleCancel} footer={null}>
                 {selectedOrder && (
                     <div>
-                        
-                        {/* Hiển thị địa chỉ giao hàng */}
-                        <Title level={5}>Shipping Address:</Title>
-                        {addresses[selectedOrder.shippingAddress.address] ? (
-                            <div className='border p-2 mb-2 flex'>
-                                <p><strong>Name:</strong> {addresses[selectedOrder.shippingAddress.address].name}</p>
-                                <p><strong>Phone:</strong> {addresses[selectedOrder.shippingAddress.address].phoneNumber}</p>
-                                <p><strong>Address:</strong> {addresses[selectedOrder.shippingAddress.address].address}</p>
-                            </div>
-                        ) : (
-                            <p>Address not found</p>
-                        )}
-
                         {/* Hiển thị danh sách sản phẩm */}
                         <Title level={5}>Products:</Title>
                         {selectedOrder.products && selectedOrder.products.length > 0 ? (
@@ -255,6 +242,18 @@ const MyOrders = () => {
                             ))
                         ) : (
                             <p><strong>No products found.</strong></p>
+                        )}
+                        
+                        {/* Hiển thị địa chỉ giao hàng */}
+                        <Title level={5}>Shipping Address:</Title>
+                        {addresses[selectedOrder.shippingAddress.address] ? (
+                            <div className='border p-2 mb-2 flex'>
+                                <p><strong>Name:</strong> {addresses[selectedOrder.shippingAddress.address].name}</p>
+                                <p><strong>Phone:</strong> {addresses[selectedOrder.shippingAddress.address].phoneNumber}</p>
+                                <p><strong>Address:</strong> {addresses[selectedOrder.shippingAddress.address].address}</p>
+                            </div>
+                        ) : (
+                            <p>Address not found</p>
                         )}
 
                         <p><strong>Status:</strong> {getOrderStatusTag(selectedOrder.status)}</p>
