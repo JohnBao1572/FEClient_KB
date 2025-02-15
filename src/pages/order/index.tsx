@@ -178,10 +178,10 @@ const MyOrders = () => {
             key: 'actions',
             render: (_: any, record: BillModel) => (
                 <>
-                    <Button 
-                    onClick={() => showModal(record)}
-                    icon={<EyeOutlined size={20} color='blue'/>} 
-                    type='text'
+                    <Button
+                        onClick={() => showModal(record)}
+                        icon={<EyeOutlined size={20} color='blue' />}
+                        type='text'
                     />
 
                     <Button
@@ -219,11 +219,7 @@ const MyOrders = () => {
             <Modal title="Order Details" open={isModalVisible} onCancel={handleCancel} footer={null}>
                 {selectedOrder && (
                     <div>
-                        <Title level={4}>Order ID: {selectedOrder._id}</Title>
-                        <p><strong>Status:</strong> {getOrderStatusTag(selectedOrder.status)}</p>
-                        <p><strong>Payment Status:</strong> {getPaymentStatusTag(selectedOrder.paymentStatus)}</p>
-
-
+                        
                         {/* Hiển thị địa chỉ giao hàng */}
                         <Title level={5}>Shipping Address:</Title>
                         {addresses[selectedOrder.shippingAddress.address] ? (
@@ -261,6 +257,9 @@ const MyOrders = () => {
                             <p><strong>No products found.</strong></p>
                         )}
 
+                        <p><strong>Status:</strong> {getOrderStatusTag(selectedOrder.status)}</p>
+
+                        <p><strong>Payment Status:</strong> {getPaymentStatusTag(selectedOrder.paymentStatus)}</p>
 
                         <h2><strong>Total:</strong> {FormatCurrency.VND.format(selectedOrder.total)}</h2>
                     </div>
