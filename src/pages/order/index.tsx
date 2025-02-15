@@ -1,9 +1,10 @@
 import handleAPI from '@/apis/handleAPI';
 import { AddressModel, BillModel, BillStatus, PaymentStatus } from '@/models/Product';
 import { FormatCurrency } from '@/utils/formatNumber';
-import { Alert, Button, List, Modal, Spin, Table, Tag, Typography } from 'antd';
+import { Alert, Button, List, message, Modal, Spin, Table, Tag, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FaShoppingBag } from 'react-icons/fa';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -61,6 +62,46 @@ const MyOrders = () => {
         fetchData();
     }, []);
 
+    const handleDeleteOrder = async (orderId: string) => {
+        if (!orderId) {
+            message.error("Error: ID order not valid!");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            // Gửi yêu cầu xóa đơn hàng
+            const deleteRes = await handleAPI({
+                url: `http://localhost:5000/payments/delete-bill?id=${orderId}`,
+                method: 'delete',
+            });
+
+            if (deleteRes?.data?.success) {
+                message.success("Delete order success");
+
+                // Fetch lại danh sách đơn hàng mới nhất
+                const updatedOrdersRes = await handleAPI({
+                    url: 'http://localhost:5000/payments/',
+                    method: 'get',
+                });
+
+                if (Array.isArray(updatedOrdersRes?.data?.data)) {
+                    setOrders(updatedOrdersRes.data.data);
+                } else {
+                    setOrders([]);
+                }
+            } else {
+                message.error("Delete my order failed");
+            }
+        } catch (error) {
+            console.error("Error when delete order", error);
+            message.error("Have an error when delete order");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Trạng thái đơn hàng
     const getOrderStatusTag = (status: BillStatus) => {
         const statusMap = {
@@ -101,7 +142,7 @@ const MyOrders = () => {
             key: '_id',
             render: (_id: string) => <strong>{_id}</strong>,
         },
-        
+
         {
             title: 'Customer',
             dataIndex: 'shippingAddress',
@@ -136,9 +177,25 @@ const MyOrders = () => {
             title: 'Actions',
             key: 'actions',
             render: (_: any, record: BillModel) => (
-                <Button type="primary" onClick={() => showModal(record)}>
-                    View Order
-                </Button>
+                <>
+                    <Button 
+                    onClick={() => showModal(record)}
+                    icon={<EyeOutlined size={20} color='blue'/>} 
+                    type='text'
+                    />
+
+                    <Button
+                        onClick={() =>
+                            Modal.confirm({
+                                title: 'Confirm',
+                                content: 'Are you sure you want to remove this order?',
+                                onOk: async () => handleDeleteOrder(record._id),
+                            })
+                        }
+                        icon={<DeleteOutlined style={{ fontSize: 20, color: 'red' }} />}
+                        type="text"
+                    />
+                </>
             ),
         },
     ];
