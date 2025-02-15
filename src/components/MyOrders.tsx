@@ -203,10 +203,6 @@ const MyOrders = () => {
 
     return (
         <div className="container">
-            <Title level={2}>
-                <FaShoppingBag className="mr-2" /> My Orders
-            </Title>
-
             {loading ? (
                 <Spin tip="Loading orders..." />
             ) : orders.length === 0 ? (

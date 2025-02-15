@@ -104,4 +104,18 @@
  .menu-category-list h4{
    font-weight: 400;
  }
+
+ .profile-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px; /* Khoảng cách giữa tabs và nội dung */
+}
+
+.profile-tabs {
+  min-width: 200px; /* Độ rộng cố định cho tab */
+}
+
+.profile-content {
+  flex-grow: 1; /* Cho phép phần nội dung mở rộng hết mức */
+}
  
