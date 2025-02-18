@@ -1,4 +1,3 @@
-/** @format */
 
 export interface CategoyModel {
 	_id: string;
@@ -110,4 +109,11 @@ export interface BillProductModel {
     color: string;
     qty: number;
     image: string;
+}
+
+export interface BillAddress{
+	_id: string;
+	name: string;
+	phoneNumber: string;
+	address: string;
 }

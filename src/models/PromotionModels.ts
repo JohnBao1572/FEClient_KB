@@ -1,4 +1,3 @@
-/** @format */
 
 export interface PromotionModel {
 	_id: string;
