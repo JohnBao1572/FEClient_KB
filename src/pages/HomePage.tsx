@@ -67,6 +67,13 @@ const HomePage = (props: Props) => {
 		}
 	}, [numOfColumn]);
 
+	useEffect(() => {
+        const script = document.createElement('script');
+        script.src = 'https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1';
+        script.async = true;
+        document.body.appendChild(script);
+    }, []);
+
 	return (
 		<>
 			<HeadComponents title='Home' />
@@ -214,8 +221,13 @@ const HomePage = (props: Props) => {
 						</div>
 					</Sectioin>
 				</div>
-
 			</div>
+			<df-messenger
+                intent="WELCOME"
+                chat-title="E-commerce_ai"
+                agent-id="ea56968c-024c-48d6-a367-5b01a5ad0228"
+                language-code="en"
+            ></df-messenger>					
 		</>
 	);
 };
