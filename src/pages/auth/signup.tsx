@@ -29,7 +29,7 @@ const SignUp = () => {
 	const [isAgree, setIsAgree] = useState(true);
 	const [signValues, setSignValues] = useState<any>();
 	const [numsOfCode, setNumsOfCode] = useState<string[]>([]);
-	const [times, setTimes] = useState(160);
+	const [times, setTimes] = useState(40);
 
 	const [form] = Form.useForm();
 	const dispatch = useDispatch();
@@ -79,30 +79,31 @@ const SignUp = () => {
 	};
 
 	const handleVerify = async () => {
-		if (numsOfCode.length >= 6) {
-			let code = numsOfCode.join('');
-
-			const api = `/customers/verify?id=${
-				signValues._id
-			}&code=${code.toUpperCase()}`;
-			try {
-				const res = await handleAPI({
-					url: api,
-					data: undefined,
-					method: 'put',
-				});
-
-				dispatch(addAuth(res.data.data));
-				localStorage.setItem('authData', JSON.stringify(res.data.data));
-
-				router.push('/');
-			} catch (error) {
-				console.log(error);
-			}
-		} else {
+		if (numsOfCode.length < 6) {
 			message.error('Invalid code');
+			return;
+		}
+
+		const code = numsOfCode.join('').toUpperCase();
+
+		const api = `/customers/verify?id=${signValues._id}`;
+		try {
+			const res = await handleAPI({
+				url: api,
+				data: { code },
+				method: 'put',
+			});
+
+			dispatch(addAuth(res.data.data));
+			localStorage.setItem('authData', JSON.stringify(res.data.data));
+
+			router.push('/');
+		} catch (error: any) {
+			message.error(error.response?.data?.message || 'Verification failed.');
+			console.error(error);
 		}
 	};
+
 
 	const handleResendCode = async () => {
 		const api = `/customers/resend-verify?id=${signValues._id}&email=${signValues.email}`;
@@ -121,13 +122,13 @@ const SignUp = () => {
 				<div
 					className='d-none d-md-block col-6 p-0'
 					style={{
-						backgroundImage: `https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/325906376_2074777692727406_1745368239073569186_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=k1K8blZavXkQ7kNvgERXIZL&_nc_oc=AdiY8xnnmhnX-yyBx6URsnberuRVvaG6hpgd3-0VPNSTHmVlHjJdlW3Woref0QrOO0o&_nc_zt=23&_nc_ht=scontent.fsgn8-3.fna&_nc_gid=A7d4mPhXMELk8PScvZSyjSa&oh=00_AYAbIY4z2anw0x9C-CApmhmdDG9nqv1kwXm7rFlDOru_mw&oe=67B6148D`,
+						backgroundImage: `url('https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/325906376_2074777692727406_1745368239073569186_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=k1K8blZavXkQ7kNvgERXIZL&_nc_oc=AdiY8xnnmhnX-yyBx6URsnberuRVvaG6hpgd3-0VPNSTHmVlHjJdlW3Woref0QrOO0o&_nc_zt=23&_nc_ht=scontent.fsgn8-3.fna&_nc_gid=A7d4mPhXMELk8PScvZSyjSa&oh=00_AYAbIY4z2anw0x9C-CApmhmdDG9nqv1kwXm7rFlDOru_mw&oe=67B6148D')`,
 						backgroundSize: 'cover',
 						backgroundRepeat: 'no-repeat',
+						width: '70', height: '50'
 					}}>
 					<div className='mt-5 ml-5' style={{ backgroundColor: 'transparent' }}>
 						<img
-							// src='https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/325906376_2074777692727406_1745368239073569186_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=k1K8blZavXkQ7kNvgERXIZL&_nc_oc=AdiY8xnnmhnX-yyBx6URsnberuRVvaG6hpgd3-0VPNSTHmVlHjJdlW3Woref0QrOO0o&_nc_zt=23&_nc_ht=scontent.fsgn8-3.fna&_nc_gid=A7d4mPhXMELk8PScvZSyjSa&oh=00_AYAbIY4z2anw0x9C-CApmhmdDG9nqv1kwXm7rFlDOru_mw&oe=67B6148D'
 							alt=''
 							style={{ backgroundColor: 'transparent', width: '400', height: '120' }}
 						/>
