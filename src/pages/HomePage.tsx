@@ -222,9 +222,10 @@ const HomePage = (props: Props) => {
 					</Sectioin>
 				</div>
 			</div>
+
 			<df-messenger
 				intent="WELCOME"
-				chat-title="E-commerce_ai"x
+				chat-title="E-commerce_ai"
 				agent-id="ea56968c-024c-48d6-a367-5b01a5ad0228"
 				language-code="en"
 			></df-messenger>

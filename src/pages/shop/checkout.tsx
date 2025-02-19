@@ -205,6 +205,7 @@ const CheckoutPage = () => {
             total: grandTotal, // Sử dụng giá trị grandTotal đã tính toán
             shippingAddress: paymentDetail,
             paymentMethod: paymentMethod?.methodSelected ?? '',
+            discountCode, // Thêm mã giảm giá vào dữ liệu gửi lên server
         };
 
         setIsLoading(true);
