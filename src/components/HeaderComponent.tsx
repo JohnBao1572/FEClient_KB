@@ -43,6 +43,7 @@ const HeaderComponent = () => {
 
 	console.log(auth);
 	const cart: CartItemModel[] = useSelector(cartSelector);
+	
 	const items: MenuProps['items'] = [
 		{
 			key: 'profile',
@@ -119,7 +120,7 @@ const HeaderComponent = () => {
 						<div className='col text-right'>
 							<Space>
 								<Button icon={<IoSearch size={24} />} type='text' />
-								<Button icon={<IoHeartOutline size={24} />} type='text' />
+								{/* <Button icon={<IoHeartOutline size={24} />} type='text' /> */}
 								<Dropdown
 									dropdownRender={() => (
 										<Card className='shadow' style={{ minWidth: 480 }}>

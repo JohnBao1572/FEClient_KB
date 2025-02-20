@@ -13,7 +13,7 @@ import HeadComponents from '@/components/HeadComponents';
 import { appInfo } from '@/constants/appInfos';
 import { ProductModel, SubProductModel } from '@/models/Product';
 import { authSelector } from '@/reduxs/reducers/authReducer';
-import { addProduct, cartSelector, changeCount } from '@/reduxs/reducers/cartReducer';
+import { addProduct, cartSelector, changeCount, wishlistSelector } from '@/reduxs/reducers/cartReducer';
 
 import { VND } from '@/utils/handleCurrency';
 import {
@@ -63,6 +63,8 @@ const ProductDetail = ({ pageProps }: any) => {
 	const auth = useSelector(authSelector);
 	const router = useRouter();
 	const params = useParams();
+
+	
 	const id = params ? params.id : '';
 
 	const cart: SubProductModel[] = useSelector(cartSelector);
@@ -365,7 +367,7 @@ const ProductDetail = ({ pageProps }: any) => {
 								<div className='mt-5'>
 									<Space>
 										{renderButtonGroup()}
-										<Button size='large' icon={<IoHeartOutline size={22} />} />
+										{/* <Button size='large' icon={<IoHeartOutline size={22} />}/> */}
 									</Space>
 								</div>
 							</div>
@@ -467,3 +469,7 @@ export const getStaticPaths = async () => {
 };
 
 export default ProductDetail;
+function addToWishlist(data: any): any {
+	throw new Error('Function not implemented.');
+}
+

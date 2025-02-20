@@ -23,6 +23,7 @@ const cartSlice = createSlice({
 	initialState: {
 		data: innitState,
 	},
+
 	reducers: {
 		addProduct: (state, action) => {
 			const items: CartItemModel[] = [...state.data];
@@ -40,6 +41,7 @@ const cartSlice = createSlice({
 
 			state.data = items;
 		},
+
 		removeProduct: (state, action) => {
 			const items = [...state.data];
 			const item = action.payload;
@@ -52,6 +54,7 @@ const cartSlice = createSlice({
 
 			state.data = items;
 		},
+
 		changeProduct: (state, action) => {
 			const { id, data } = action.payload;
 			const items = [...state.data];
@@ -62,6 +65,7 @@ const cartSlice = createSlice({
 
 			state.data = items;
 		},
+
 		changeCount: (state, action) => {
 			const items = [...state.data];
 			const { id, val } = action.payload;
@@ -74,9 +78,11 @@ const cartSlice = createSlice({
 
 			state.data = items;
 		},
+
 		syncProducts: (state, action) => {
 			state.data = action.payload;
 		},
+
 		removeCarts: (state, action) => {
 			state.data = [];
 		},
@@ -94,3 +100,4 @@ export const {
 } = cartSlice.actions;
 
 export const cartSelector = (state: any) => state.cartReducer.data;
+export const wishlistSelector = (state:any) => state.cartReducer.wishList;
