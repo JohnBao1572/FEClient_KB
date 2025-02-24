@@ -119,3 +119,95 @@
   flex-grow: 1; /* Cho phép phần nội dung mở rộng hết mức */
 }
  
+/* Loại bỏ scroll ngang */
+body {
+  overflow-x: hidden;
+}
+
+/* Container chính */
+.story-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Nội dung bên trong */
+.story-content {
+  width: 90%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+/* Cấu hình Carousel */
+.custom-carousel {
+  width: 100%;
+  max-width: 90vw;
+  margin: 0 auto;
+  padding: 20px;
+  overflow: hidden; /* Ngăn chặn tràn nội dung */
+}
+
+/* Định dạng từng review */
+.review-item {
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden; /* Ngăn tràn nội dung */
+}
+
+.review-item:hover {
+  transform: translateY(-5px);
+}
+
+.review-item p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Tác giả đánh giá */
+.review-item .created-by {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Số sao đánh giá */
+.review-item .stars {
+  margin-top: 5px;
+}
+
+/* Nội dung đánh giá */
+.review-item .comment {
+  font-style: italic;
+  color: #555;
+}
+
+/* Hiển thị ảnh đánh giá */
+.review-images {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; /* Giúp ảnh không bị tràn ra ngoài */
+}
+
+.review-images img {
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  object-fit: cover;
+  max-width: 100%;
+}
+
+/* Tùy chỉnh khoảng cách button */
+.custom-space {
+  margin-right: 50px;
+}

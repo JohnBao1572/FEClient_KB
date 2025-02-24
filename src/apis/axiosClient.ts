@@ -20,8 +20,8 @@ axiosClient.interceptors.request.use(async (config: any) => {
     const accesstoken = getAccesstoken(); 
 
     // FIxing
-    console.log("Request URL:", config.url); // Log URL để kiểm tra
-    console.log("Request Data:", config.data); // Log Data để kiểm tra
+    // console.log("Request URL:", config.url); // Log URL để kiểm tra
+    // console.log("Request Data:", config.data); // Log Data để kiểm tra
 
     config.headers = {
         Authorization: accesstoken ? `Bearer ${accesstoken}` : '',

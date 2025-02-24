@@ -107,10 +107,6 @@ const HeaderComponent = () => {
 										key: 'story',
 									},
 									{
-										label: <Link href={'/blog'}>Blog</Link>,
-										key: 'blog',
-									},
-									{
 										label: <Link href={'/contact'}>Contact Us</Link>,
 										key: 'contact',
 									},

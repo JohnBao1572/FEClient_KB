@@ -179,7 +179,7 @@ const HomePage = (props: Props) => {
 															alt={item.title}
 															src={
 																item.image ??
-																`https://imgcdn.stablediffusionweb.com/2024/4/25/0af7fb7a-9192-47cf-8f7b-7273a51b3e44.jpg`
+																`https://img.lovepik.com/png/20231105/Girl-schoolbag-hat-3D-cartoon-animated-cartoon-female-characters-characters_496887_wh860.png`
 															}
 														/>
 														<div
@@ -191,11 +191,6 @@ const HomePage = (props: Props) => {
 																left: 0,
 															}}>
 															<Button
-																onClick={() =>
-																	router.push(
-																		`/filter-product?catId=${item._id}`
-																	)
-																}
 																style={{ width: '80%' }}
 																size='large'>
 																{item.title}
@@ -212,7 +207,7 @@ const HomePage = (props: Props) => {
 				</Sectioin>
 				<div className="mt-4">
 					<Sectioin>
-						<TabbarComponent title='Our Bestseller' />
+						<TabbarComponent title='Products' />
 						<div className='row'>
 							{bestSellers &&
 								bestSellers.map((item) => (
