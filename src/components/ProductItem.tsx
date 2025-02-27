@@ -31,8 +31,6 @@ const ProductItem = (props: Props) => {
 		setElementWidth(width);
 	}, []);
 
-	// @daoquang-livecode
-
 	return (
 		<Link
 			href={`/products/${item.slug}/${item._id}`}

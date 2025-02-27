@@ -9,6 +9,7 @@ import {
 	Divider,
 	Drawer,
 	Dropdown,
+	Input,
 	List,
 	Menu,
 	MenuProps,
@@ -36,6 +37,7 @@ const HeaderComponent = () => {
 		useState(false);
 	const [productSeleted, setProductSeleted] = useState<CartItemModel>();
 	const [isVisibleMenuDrawe, setIsVisibleMenuDrawe] = useState(false);
+	const [searchValue, setSearchValue] = useState('');
 
 	const auth = useSelector(authSelector);
 	const dispatch = useDispatch();
@@ -62,6 +64,12 @@ const HeaderComponent = () => {
 			},
 		},
 	];
+
+	const handleSearch = () =>{
+		if(searchValue.trim()){
+			router.push(`/search?query=${searchValue}`)
+		}
+	}
 
 	return (
 		<Affix offsetTop={0}>
@@ -115,7 +123,13 @@ const HeaderComponent = () => {
 						</div>
 						<div className='col text-right'>
 							<Space>
-								<Button icon={<IoSearch size={24} />} type='text' />
+							<Input
+                                    placeholder='Search products...'
+                                    value={searchValue}
+                                    onChange={(e) => setSearchValue(e.target.value)}
+                                    style={{ width: 200 }}
+                                />
+								<Button icon={<IoSearch size={24} />} type='text' onClick={handleSearch}/>
 								{/* <Button icon={<IoHeartOutline size={24} />} type='text' /> */}
 								<Dropdown
 									dropdownRender={() => (

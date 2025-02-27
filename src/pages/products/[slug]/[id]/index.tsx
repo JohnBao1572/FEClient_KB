@@ -1,5 +1,3 @@
-/** @format */
-
 
 import handleAPI from '@/apis/handleAPI';
 import {

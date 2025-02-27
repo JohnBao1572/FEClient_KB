@@ -99,7 +99,7 @@ const CategoriesListCard = (props: Props) => {
 					</div>
 				</>
 			) : (
-				<Empty description='Không tìm thấy dữ liệu' />
+				<Empty description='Not found data' />
 			)}
 		</Card>
 	) : (
