@@ -95,7 +95,7 @@ const HomePage = (props: Props) => {
 											style={{
 												width: '100%',
 												height: 'auto',
-												objectFit: 'cover',
+												objectFit: 'contain',
 												maxHeight: 500,
 											}}
 											alt=''
