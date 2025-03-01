@@ -17,7 +17,7 @@ const Story = () => {
     }, []);
 
     const getTop54Star = async () => {
-        const api = `http://localhost:5000/reviews/getTop5Start`;
+        const api = `/reviews/getTop5Start`;
 
         try {
             setIsLoading(true);

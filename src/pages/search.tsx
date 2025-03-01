@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Input, List, Skeleton, Typography } from 'antd';
 import ProductItem from '@/components/ProductItem';
 import { ProductModel } from '@/models/Product';
+import handleAPI from '@/apis/handleAPI';
 
 const { Title } = Typography;
 
@@ -14,20 +15,23 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (query) {
-      setLoading(true);
-      // Gọi API tìm kiếm sản phẩm của bạn
-      fetch(`http://localhost:5000/products/get-title-product?title=${query}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setSearchResults(data.data); // Giả sử dữ liệu trả về có dạng { data: [...] }
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching search results:', error);
-          setLoading(false);
-        });
+      fetchSearchResults(query as string, setSearchResults, setLoading);
     }
   }, [query]);
+
+  const fetchSearchResults = async (query: string, setSearchResults: (data: ProductModel[]) => void, setLoading: (loading: boolean) => void) => {
+    const api = `/products/get-title-product?title=${query}`
+    setLoading(true);
+    try {
+      const res = await handleAPI({url:api, method: 'get'})
+      
+      setSearchResults(res.data.data); // Giả sử dữ liệu trả về có dạng { data: [...] }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container">

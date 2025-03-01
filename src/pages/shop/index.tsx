@@ -116,9 +116,7 @@ const ShopPage = () => {
 				</div>
 
 				<Layout className='bg-white mt-3 mb-4'>
-					<div className='d-none d-md-block'>
-						<Sider theme='light'>sider</Sider>
-					</div>
+					
 					{isLoading ? (
 						<Skeleton />
 					) : products && products.length > 0 ? (

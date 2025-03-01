@@ -13,18 +13,6 @@ export const methods = [
 		key: 'cod',
 		title: 'Cash on delivery',
 	},
-	{
-		key: 'debit',
-		title: 'Debit/Credit card',
-	},
-	{
-		key: 'google',
-		title: 'Google pay',
-	},
-	{
-		key: 'paypal',
-		title: 'Paypal',
-	},
 ];
 
 const PaymentMethod = (props: Props) => {

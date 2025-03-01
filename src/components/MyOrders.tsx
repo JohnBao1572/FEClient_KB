@@ -21,9 +21,9 @@ const MyOrders = () => {
         const fetchData = async () => {
             try {
                 const [ordersRes, addressesRes, productsRes] = await Promise.all([
-                    handleAPI({ url: 'http://localhost:5000/payments/', method: 'get' }),
-                    handleAPI({ url: 'http://localhost:5000/carts/get-address', method: 'get' }),
-                    handleAPI({ url: 'http://localhost:5000/products/', method: 'get' }),
+                    handleAPI({ url: '/payments/', method: 'get' }),
+                    handleAPI({ url: '/carts/get-address', method: 'get' }),
+                    handleAPI({ url: '/products/', method: 'get' }),
                 ]);
 
                 // Xử lý đơn hàng
@@ -73,7 +73,7 @@ const MyOrders = () => {
 
             // Gửi yêu cầu xóa đơn hàng
             const deleteRes = await handleAPI({
-                url: `http://localhost:5000/payments/delete-bill?id=${orderId}`,
+                url: `/payments/delete-bill?id=${orderId}`,
                 method: 'delete',
             });
 
@@ -82,7 +82,7 @@ const MyOrders = () => {
 
                 // Fetch lại danh sách đơn hàng mới nhất
                 const updatedOrdersRes = await handleAPI({
-                    url: 'http://localhost:5000/payments/',
+                    url: '/payments/',
                     method: 'get',
                 });
 
