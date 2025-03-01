@@ -38,6 +38,7 @@ const HeaderComponent = () => {
 	const [productSeleted, setProductSeleted] = useState<CartItemModel>();
 	const [isVisibleMenuDrawe, setIsVisibleMenuDrawe] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
+	const [isSearchVisible, setIsSearchVisible] = useState(false);
 
 	const auth = useSelector(authSelector);
 	const dispatch = useDispatch();
@@ -130,7 +131,7 @@ const HeaderComponent = () => {
                                     style={{ width: 200 }}
                                 />
 								<Button icon={<IoSearch size={24} />} type='text' onClick={handleSearch}/>
-								{/* <Button icon={<IoHeartOutline size={24} />} type='text' /> */}
+								
 								<Dropdown
 									dropdownRender={() => (
 										<Card className='shadow' style={{ minWidth: 480 }}>
