@@ -1,164 +1,115 @@
-
 import handleAPI from '@/apis/handleAPI';
-import { AddressModal } from '@/modals';
+import { ProfileModel } from '@/models/ProfileModel';
 import { addAuth, authSelector } from '@/reduxs/reducers/authReducer';
-import { uploadFile } from '@/utils/uploadFile';
-import { Button, Form, Input, Upload, UploadFile } from 'antd';
+import { Avatar, Button, Form, Input, Spin, Upload, UploadFile, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { BiCamera, BiEdit } from 'react-icons/bi';
-import { FaLocationDot } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 const PersionalInfomations = () => {
-	const [avatarList, setAvatarList] = useState<UploadFile[]>([]);
-	const [isVisibleModalAddress, setIsVisibleModalAddress] = useState(false);
-	const [isUpdating, setIsUpdating] = useState(false);
+    const [profile, setProfile] = useState<ProfileModel | null>(null);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [file, setFile] = useState<UploadFile | null>(null);
 
-	const [form] = Form.useForm();
-	const auth = useSelector(authSelector);
-	const dispatch = useDispatch();
+    const [form] = Form.useForm();
+    const auth = useSelector(authSelector);
+    const dispatch = useDispatch();
 
-	useEffect(() => {
-		form.setFieldsValue(auth);
-	}, []);
+    useEffect(() => {
+        handleProfile();
+    }, [auth._id, form]);
 
-	const handleVaues = async (values: any) => {
-		const data: any = {};
+    const handleProfile = async () => {
+        const api = `/customers/get-profile?id=${auth._id}`;
 
-		for (const i in values) {
-			data[i] = values[i] ?? '';
-		}
+        setIsUpdating(true);
+        try {
+            const res = await handleAPI({ url: api, method: 'get' });
+            setProfile(res.data.data);
+            form.setFieldsValue(res.data.data);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
 
-		try {
-			if (avatarList.length > 0) {
-				delete data.photoUrl;
-				const file = avatarList[0];
-				const url = await uploadFile(file.originFileObj);
+    const handleUpdateProfile = async (values: any) => {
+        const api = `/customers/update?id=${auth._id}`;
 
-				data.photoURL = url;
+        setIsUpdating(true);
+        try {
+            if (file && file.originFileObj) {
+                const formData = new FormData();
+                formData.append('file', file.originFileObj);
+                const response = await axios.post('/upload', formData);
+                const imageUrl = response.data.url;
+                values.photoURL = imageUrl;
+            }
 
-				await updateProfile(data);
-			} else {
-				await updateProfile(data);
-			}
-		} catch (error) {
-			console.log(error);
-			setIsUpdating(false);
-		}
-	};
+            const res = await handleAPI({ url: api, data: values, method: 'put' });
+            setProfile(res.data.data);
+            console.log(res);
+            message.success("Profile updated successfully");
+        } catch (error) {
+            console.log(error);
+            message.error("Profile update failed");
+        } finally {
+            setIsUpdating(false);
+        }
+    };
 
-	const updateProfile = async (data: any) => {
-		try {
-			const api = `/customers/update`;
+    const handleFileChange = ({ file }: any) => {
+        setFile(file);
+    };
 
-			const res = await handleAPI({
-				url: api,
-				data: {
-					...data,
-					name: `${data.firstName} ${data.lastName}`,
-				},
-				method: 'put',
-			});
-			dispatch(addAuth({ ...auth, ...res.data.data }));
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setIsUpdating(false);
-		}
-	};
+    return (
+        <div style={{ maxWidth: 600, margin: 'auto', padding: 20, background: '#fff', borderRadius: 8 }}>
+            <h2 style={{ textAlign: 'center', marginBottom: 20 }}>My Profile</h2>
 
-	return (
-		<>
-			<Form
-				disabled={isUpdating}
-				layout='vertical'
-				onFinish={handleVaues}
-				size='large'
-				form={form}>
-				<div className='row d-flex'>
-					<div className='col'>
-						<Form.Item name={'photoUrl'}>
-							<Upload
-								onChange={(val) => {
-									const { fileList } = val;
-									setAvatarList(
-										fileList.map((item) => ({
-											...item,
-											url: item.originFileObj
-												? URL.createObjectURL(item.originFileObj)
-												: '',
-										}))
-									);
-								}}
-								fileList={avatarList}
-								listType='picture-circle'
-								accept='image/*'
-								style={{
-									width: 50,
-								}}>
-								{avatarList.length > 0 ? null : (
-									<BiCamera size={28} className='text-muted' />
-								)}
-							</Upload>
-						</Form.Item>
-					</div>
+            {isUpdating ? (
+                <Spin tip="Loading..." style={{ display: 'flex', justifyContent: 'center' }} />
+            ) : (
+                <Form form={form} layout="vertical" onFinish={handleUpdateProfile}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 20 }}>
+                        <Upload
+                            showUploadList={false}
+                            beforeUpload={() => false}
+                            onChange={handleFileChange}
+                        >
+                            <Avatar
+                                size={100}
+                                src={profile?.photoURL}
+                                style={{ cursor: 'pointer' }}
+                            />
+                        </Upload>
+                        <Upload showUploadList={false} beforeUpload={() => false} onChange={handleFileChange}>
+                            <Button icon={<UploadOutlined />} style={{ marginTop: 10 }}>Upload Photo</Button>
+                        </Upload>
+                    </div>
 
-					<div className='col text-right'>
-						<Button
-							type='primary'
-							onClick={() => form.submit()}
-							icon={<BiEdit size={22} />}>
-							Save
-						</Button>
-					</div>
-				</div>
-				<div className='row'>
-					<div className='col'>
-						<Form.Item name={'firstName'} label='First name'>
-							<Input allowClear />
-						</Form.Item>
-					</div>
-					<div className='col'>
-						<Form.Item name={'lastName'} label='Last name'>
-							<Input allowClear />
-						</Form.Item>
-					</div>
-				</div>
-				<div className='row'>
-					<div className='col'>
-						<Form.Item name={'phoneNumber'} label='Phone number'>
-							<Input allowClear />
-						</Form.Item>
-					</div>
-					<div className='col'>
-						<Form.Item name={'email'} label='Email address'>
-							<Input allowClear />
-						</Form.Item>
-					</div>
-				</div>
-				<Form.Item name={'address'} label='Address'>
-					<Input
-						allowClear
-						suffix={
-							<FaLocationDot
-								onClick={() => setIsVisibleModalAddress(true)}
-								size={22}
-								className='text-danger m-0	'
-							/>
-						}
-					/>
-				</Form.Item>
-			</Form>
+                    <Form.Item name="firstName" label="First Name" rules={[{ required: true, message: 'Please enter your first name' }]}>
+                        <Input placeholder="Enter first name" />
+                    </Form.Item>
 
-			<AddressModal
-				onAddAddress={(val) => {
-					form.setFieldValue('address', val);
-				}}
-				visible={isVisibleModalAddress}
-				onClose={() => setIsVisibleModalAddress(false)}
-			/>
-		</>
-	);
+                    <Form.Item name="lastName" label="Last Name" rules={[{ required: true, message: 'Please enter your last name' }]}>
+                        <Input placeholder="Enter last name" />
+                    </Form.Item>
+
+                    <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}>
+                        <Input placeholder="Enter email" disabled />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" block loading={isUpdating}>Save</Button>
+                    </Form.Item>
+                </Form>
+            )}
+        </div>
+    );
 };
 
 export default PersionalInfomations;

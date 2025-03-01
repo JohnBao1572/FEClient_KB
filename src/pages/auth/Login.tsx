@@ -108,9 +108,9 @@ const Login = () => {
 									</Form.Item>
 								</Form>
 
-								<div className='mt-3 text-right'>
+								{/* <div className='mt-3 text-right'>
 									<Link href={'/auth/forgot-password'}>Forgot Password</Link>
-								</div>
+								</div> */}
 
 								<div className='mt-3'>
 									<Button
