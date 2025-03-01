@@ -38,7 +38,6 @@ const HeaderComponent = () => {
 	const [productSeleted, setProductSeleted] = useState<CartItemModel>();
 	const [isVisibleMenuDrawe, setIsVisibleMenuDrawe] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
-	const [isSearchVisible, setIsSearchVisible] = useState(false);
 
 	const auth = useSelector(authSelector);
 	const dispatch = useDispatch();
