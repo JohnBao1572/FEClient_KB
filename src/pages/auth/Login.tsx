@@ -73,6 +73,7 @@ const Login = () => {
 					<div
 						className='container d-flex'
 						style={{ height: '100%', alignItems: 'center' }}>
+							
 						<div className='col-sm-12 col-md-12 col-lg-8 offset-lg-2'>
 							<Title className='m-0'>Welcome</Title>
 							<Paragraph type='secondary'>Please login here</Paragraph>
@@ -107,10 +108,6 @@ const Login = () => {
 										<Input.Password placeholder='Password!!!' />
 									</Form.Item>
 								</Form>
-
-								{/* <div className='mt-3 text-right'>
-									<Link href={'/auth/forgot-password'}>Forgot Password</Link>
-								</div> */}
 
 								<div className='mt-3'>
 									<Button

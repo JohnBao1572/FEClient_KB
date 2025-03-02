@@ -1,5 +1,4 @@
 
-
 export interface ProfileModel {
 	_id: string;
 	firstName: string;
@@ -13,3 +12,5 @@ export interface ProfileModel {
 	photoURL?: string;
 	__v: number;
 }
+
+

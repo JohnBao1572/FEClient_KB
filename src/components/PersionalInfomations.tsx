@@ -48,8 +48,6 @@ const PersionalInfomations = () => {
 
     return (
         <div style={{ maxWidth: 600, margin: 'auto', padding: 20, background: '#fff', borderRadius: 8 }}>
-            <h2 style={{ textAlign: 'center', marginBottom: 20 }}>My Profile</h2>
-
             {isUpdating ? (
                 <Skeleton active />
             ) : (

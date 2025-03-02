@@ -46,7 +46,7 @@ const SignUp = () => {
 	useEffect(() => {
 		const time = setInterval(() => {
 			setTimes((t) => t - 1);
-		}, 1000);
+		}, 3000);
 		return () => clearInterval(time);
 	}, []);
 
@@ -139,6 +139,7 @@ const SignUp = () => {
 					<div
 						className='container d-flex'
 						style={{ height: '100%', alignItems: 'center' }}>
+							
 						<div className='col-sm-12 col-md-12 col-lg-8 offset-lg-2'>
 							{signValues ? (
 								<>
