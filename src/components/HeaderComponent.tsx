@@ -111,7 +111,7 @@ const HeaderComponent = () => {
 										key: 'shop',
 									},
 									{
-										label: <Link href={'/story'}>Out story</Link>,
+										label: <Link href={'/story'}>Our story</Link>,
 										key: 'story',
 									},
 									{

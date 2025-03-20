@@ -6,12 +6,14 @@ import { addAuth } from '@/reduxs/reducers/authReducer';
 import {
 	Button,
 	Checkbox,
+	Divider,
 	Form,
 	Input,
 	message,
 	Space,
 	Typography,
 } from 'antd';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
@@ -122,7 +124,7 @@ const SignUp = () => {
 				<div
 					className='d-none d-md-block col-6 p-0'
 					style={{
-						backgroundImage: `url('https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/325906376_2074777692727406_1745368239073569186_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=k1K8blZavXkQ7kNvgERXIZL&_nc_oc=AdiY8xnnmhnX-yyBx6URsnberuRVvaG6hpgd3-0VPNSTHmVlHjJdlW3Woref0QrOO0o&_nc_zt=23&_nc_ht=scontent.fsgn8-3.fna&_nc_gid=A7d4mPhXMELk8PScvZSyjSa&oh=00_AYAbIY4z2anw0x9C-CApmhmdDG9nqv1kwXm7rFlDOru_mw&oe=67B6148D')`,
+						backgroundImage: `url('https://scontent.fhan3-2.fna.fbcdn.net/v/t39.30808-6/325906376_2074777692727406_1745368239073569186_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=ispnTI4qAk4Q7kNvgGVNU4t&_nc_oc=AdkU-HjUPY5P7rOIqGHRGvkr8AbKCU6X0sWNGv0Mu3TDIp98bPhV-kbHY37FoZJNxW4&_nc_zt=23&_nc_ht=scontent.fhan3-2.fna&_nc_gid=OLVVh_mKUueVg2OBb73nwg&oh=00_AYHYU50QMhZi1Trdy3LKyepL7KHMzs517Nn8mtbtlLzkEQ&oe=67E15DCD')`,
 						backgroundSize: 'contain',
 						backgroundRepeat: 'no-repeat',
 						width: '100%',
@@ -139,7 +141,7 @@ const SignUp = () => {
 					<div
 						className='container d-flex'
 						style={{ height: '100%', alignItems: 'center' }}>
-							
+
 						<div className='col-sm-12 col-md-12 col-lg-8 offset-lg-2'>
 							{signValues ? (
 								<>
@@ -360,6 +362,13 @@ const SignUp = () => {
 											onClick={() => form.submit()}>
 											Sign Up
 										</Button>
+
+									</div>
+
+									<Divider />
+
+									<div className="mt-3 text-center">
+										<Link href={`/auth/login`}>Login</Link>
 									</div>
 								</>
 							)}
